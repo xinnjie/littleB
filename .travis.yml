@@ -1,0 +1,38 @@
+language: c++
+
+matrix:
+  include:
+    - os: linux
+      dist: xenial
+      addons:
+        apt:
+          packages:
+            - g++
+            - cmake
+            - libboost-all-dev
+            - libevent-dev
+            - libdouble-conversion-dev
+            - libgoogle-glog-dev
+            - libgflags-dev
+            - libiberty-dev
+            - liblz4-dev
+            - liblzma-dev
+            - libsnappy-dev
+            - make
+            - zlib1g-dev
+            - binutils-dev
+            - libjemalloc-dev
+            - libssl-dev
+            - pkg-config
+      compiler: gcc
+      env: BUILD_TYPE='DEBUG' PLATFORM_CMAKE_OPTION=''
+
+
+before_script:
+  - cd ${TRAVIS_BUILD_DIR}
+  - cmake -H. -BBuild -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ${PLATFORM_CMAKE_OPTION} -Wdev
+  - cd Build
+
+script:
+  - make
+  - ctest
