@@ -10,6 +10,7 @@ matrix:
 
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
+  - bash ./third_party/folly/folly/build/bootstrap-osx-homebrew.sh
   - cmake -H. -BBuild -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -Wdev
   - cd Build
 
