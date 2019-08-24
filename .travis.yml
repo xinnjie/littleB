@@ -6,12 +6,12 @@ matrix:
     - os: osx
       osx_image: xcode10.2
       compiler: clang
-      env: BUILD_TYPE='DEBUG'
+      env: BUILD_TYPE='DEBUG' OPENSSL_ROOT_DIR='/usr/local/opt/openssl'
 
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
   - bash ./third_party/folly/folly/build/bootstrap-osx-homebrew.sh
-  - cmake -H. -BBuild -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -Wdev
+  - cmake -H. -BBuild -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DOPENSSL_ROOT_DIR=${OPENSSL_ROOT_DIR} -Wdev
   - cd Build
 
 script:
