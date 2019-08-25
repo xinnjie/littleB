@@ -3,7 +3,7 @@ language: c++
 matrix:
   include:
     - os: osx
-      osx_image: xcode10.2
+      osx_image: xcode11
       addons:
         homebrew:
           packages:
@@ -45,8 +45,7 @@ matrix:
             - libjemalloc-dev
             - libssl-dev
             - pkg-config
-      compiler:
-        - gcc
+      compiler: gcc
       env: BUILD_TYPE='DEBUG'
 
 
