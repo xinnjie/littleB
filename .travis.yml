@@ -1,16 +1,57 @@
 language: c++
-compiler: clang
 
 matrix:
   include:
     - os: osx
       osx_image: xcode10.2
+      addons:
+        homebrew:
+          packages:
+            - boost
+            - cmake
+            - gflags
+            - git
+            - google-glog
+            - libevent
+            - libtool
+            - lz4
+            - lzma
+            - openssl
+            - snappy
+            - xz
+            - zlib
       compiler: clang
       env: BUILD_TYPE='DEBUG' PLATFORM_CMAKE_OPTION='-DOPENSSL_ROOT_DIR=/usr/local/opt/openssl -DFOLLY_HAVE_WEAK_SYMBOLS=ON'
 
+    - os: linux
+      dist: xenial
+      addons:
+        apt:
+          packages:
+            - g++
+            - cmake
+            - libboost-all-dev
+            - libevent-dev
+            - libdouble-conversion-dev
+            - libgoogle-glog-dev
+            - libgflags-dev
+            - libiberty-dev
+            - liblz4-dev
+            - liblzma-dev
+            - libsnappy-dev
+            - make
+            - zlib1g-dev
+            - binutils-dev
+            - libjemalloc-dev
+            - libssl-dev
+            - pkg-config
+      compiler:
+        - gcc
+      env: BUILD_TYPE='DEBUG'
+
+
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
-  - bash ./third_party/folly/folly/build/bootstrap-osx-homebrew.sh
   - cmake -H. -BBuild -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ${PLATFORM_CMAKE_OPTION} -Wdev
   - cd Build
 
