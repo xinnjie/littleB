@@ -9,20 +9,18 @@ matrix:
           packages:
             - boost
             - cmake
-            - gflags
-            - git
-            - glog
-            - libevent
-            - libtool
-            - lz4
             - double-conversion
+            - gflags
+            - glog
+            - jemalloc
+            - libevent
+            - lz4
             - openssl
+            - pkg-config
             - snappy
             - xz
-            - zlib
-            - jemalloc
       compiler: clang
-      env: BUILD_TYPE='DEBUG' PLATFORM_CMAKE_OPTION='-DOPENSSL_ROOT_DIR=/usr/local/opt/openssl -DFOLLY_HAVE_WEAK_SYMBOLS=ON'
+      env: BUILD_TYPE='DEBUG' PLATFORM_CMAKE_OPTION='-DOPENSSL_ROOT_DIR=/usr/local/opt/openssl'
 
     - os: linux
       dist: xenial
