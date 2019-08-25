@@ -2,26 +2,6 @@ language: c++
 
 matrix:
   include:
-    - os: osx
-      osx_image: xcode11
-      addons:
-        homebrew:
-          packages:
-            - boost
-            - cmake
-            - double-conversion
-            - gflags
-            - glog
-            - jemalloc
-            - libevent
-            - lz4
-            - openssl
-            - pkg-config
-            - snappy
-            - xz
-      compiler: clang
-      env: BUILD_TYPE='DEBUG' PLATFORM_CMAKE_OPTION='-DOPENSSL_ROOT_DIR=/usr/local/opt/openssl'
-
     - os: linux
       dist: xenial
       addons:
@@ -45,7 +25,7 @@ matrix:
             - libssl-dev
             - pkg-config
       compiler: gcc
-      env: BUILD_TYPE='DEBUG'
+      env: BUILD_TYPE='DEBUG' PLATFORM_CMAKE_OPTION=''
 
 
 before_script:
