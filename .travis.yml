@@ -11,11 +11,11 @@ matrix:
             - cmake
             - gflags
             - git
-            - google-glog
+            - glog
             - libevent
             - libtool
             - lz4
-            - lzma
+            - double-conversion
             - openssl
             - snappy
             - xz
@@ -56,5 +56,5 @@ before_script:
   - cd Build
 
 script:
-  - make -j
-  - ctest -V -j
+  - make
+  - ctest
