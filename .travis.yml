@@ -6,7 +6,7 @@ matrix:
     - os: osx
       osx_image: xcode10.2
       compiler: clang
-      env: BUILD_TYPE='DEBUG' PLATFORM_CMAKE_OPTION='-OPENSSL_ROOT_DIR=/usr/local/opt/openssl -DFOLLY_HAVE_WEAK_SYMBOLS=ON'
+      env: BUILD_TYPE='DEBUG' PLATFORM_CMAKE_OPTION='-DOPENSSL_ROOT_DIR=/usr/local/opt/openssl -DFOLLY_HAVE_WEAK_SYMBOLS=ON'
 
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
