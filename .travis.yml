@@ -20,6 +20,7 @@ matrix:
             - snappy
             - xz
             - zlib
+            - jemalloc
       compiler: clang
       env: BUILD_TYPE='DEBUG' PLATFORM_CMAKE_OPTION='-DOPENSSL_ROOT_DIR=/usr/local/opt/openssl -DFOLLY_HAVE_WEAK_SYMBOLS=ON'
 
