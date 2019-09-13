@@ -24,6 +24,7 @@ matrix:
             - libjemalloc-dev
             - libssl-dev
             - pkg-config
+            - protobuf
       compiler: gcc
       env: BUILD_TYPE='DEBUG' PLATFORM_CMAKE_OPTION=''
 
