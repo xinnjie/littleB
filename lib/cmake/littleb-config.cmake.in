@@ -1,0 +1,10 @@
+@PACKAGE_INIT@
+
+find_package(protobuf REQUIRED)
+find_package(boost REQUIRED)
+find_package(folly REQUIRED)
+find_package(wangle REQUIRED)
+
+if(NOT TARGET littleb::littleb)
+    include(${CMAKE_CURRENT_LIST_DIR}/littleb-targets.cmake)
+endif()

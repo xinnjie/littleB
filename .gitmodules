@@ -13,3 +13,6 @@
 [submodule "third_party/hiredis"]
 	path = third_party/hiredis
 	url = https://github.com/redis/hiredis.git
+[submodule "third_party/wangle"]
+	path = third_party/wangle
+	url = https://github.com/facebook/wangle.git

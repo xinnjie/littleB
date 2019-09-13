@@ -3,6 +3,9 @@ project(littleB)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_VERBOSE_MAKEFILE ON)
+
+find_package(protobuf REQUIRED)
+find_package(boost REQUIRED)
 add_subdirectory(third_party EXCLUDE_FROM_ALL)
 add_subdirectory(lib)
 add_subdirectory(app)

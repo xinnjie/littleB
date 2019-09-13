@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+message RetInfo {
+    int32 ret_code = 1;
+    string ret_msg = 2;
+}
+
+
+message ExampleReq {
+    uint32 example_uint = 1;
+}
+
+message ExampleResp {
+    RetInfo ret = 1;
+}
+
+service ExampleServiceGroup {
+    rpc Example1 (ExampleReq) returns (ExampleResp);
+    rpc Example2 (ExampleReq) returns (ExampleResp);
+}
