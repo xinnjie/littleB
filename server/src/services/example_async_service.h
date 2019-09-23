@@ -4,7 +4,7 @@
 
 #ifndef LITTLEB_EXAMPLE_ASYNC_SERVICE_H
 #define LITTLEB_EXAMPLE_ASYNC_SERVICE_H
-#include <service_interface.h>
+#include "service_interface.h"
 #include <boost/pointer_cast.hpp>
 #include "example_service.pb.h"
 class ExampleService : public littleB::AsyncServiceInterface {
