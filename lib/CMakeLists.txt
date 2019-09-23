@@ -10,7 +10,7 @@ option(BUILD_SHARED_LIBS "Build shared library" OFF) # TODO
 protobuf_generate_cpp(PROTO_SCRS PROTO_HDRS example_login.proto)
 add_library(littleb STATIC
         ${PROTO_SCRS}
-        command_distributor.cpp command_distributor.h game_service.cpp game_service.h service_interface.h  role_info.cpp role_info.h command_register.cpp command_register.h)
+        command_distributor.cpp command_distributor.h game_service.cpp game_service.h service_interface.h role_info.h command_register.cpp command_register.h)
 target_include_directories(littleb
         PUBLIC
         ${CMAKE_CURRENT_BINARY_DIR}
@@ -22,9 +22,11 @@ target_include_directories(littleb
 target_link_libraries(littleb
         PUBLIC
         OpenSSL::SSL  # folly&wangle has openssl depencdency, but not link
-        folly
+        Threads::Threads # folly dependency
+        Folly::folly
+        gflags::gflags
         protobuf::libprotobuf
-        wangle
+        wangle::wangle
         Boost::boost)
 target_compile_options(littleb
         PRIVATE

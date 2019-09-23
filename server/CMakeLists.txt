@@ -10,14 +10,13 @@ add_executable(example_excutable
 
 target_link_libraries(example_excutable
         PUBLIC
-        folly
+        Folly::folly
+        wangle::wangle
         littleb::littleb)
 
 target_include_directories(example_excutable
         PUBLIC
         ${CMAKE_CURRENT_BINARY_DIR})
-
-
 #add_executable(example_rpc
 #        src/example_rpc.cpp
 #        #        ${PROTO}_SCRS
