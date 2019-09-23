@@ -11,12 +11,11 @@ class ExampleService : public littleB::AsyncServiceInterface {
 public:
     using ExampleRespPtr = std::unique_ptr<ExampleResp>;  // TODO: generate
     using ExampleReqPtr = std::unique_ptr<ExampleReq>;    // TODO: generate
-    folly::Future<littleB::ResponsePtr> operator()(littleB::RequestPtr req) override {
-        //        return folly::Future<littleB::ResponsePtr>(nullptr);  // TODO: generate
+    folly::Future<littleB::ResponsePtr> operator()(littleB::RequestPtr req) override { // TODO: generate
         return DoCall(boost::dynamic_pointer_cast<ExampleReq>(std::move(req)));
     }
 
-    folly::Future<ExampleRespPtr> DoCall(ExampleReqPtr req);
+    folly::Future<ExampleRespPtr> DoCall(ExampleReqPtr req);  // TODO: generate
 };
 
 class example_async_service {};

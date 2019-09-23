@@ -10,7 +10,7 @@ option(BUILD_SHARED_LIBS "Build shared library" OFF) # TODO
 protobuf_generate_cpp(PROTO_SCRS PROTO_HDRS example_login.proto)
 add_library(littleb STATIC
         ${PROTO_SCRS}
-        command_distributor.cpp command_distributor.h game_service.cpp game_service.h service_interface.cpp include/service_interface.h include/example_include.h)
+        command_distributor.cpp command_distributor.h game_service.cpp game_service.h include/service_interface.cpp include/service_interface.h include/example_include.h role_info.cpp include/role_info.h)
 target_include_directories(littleb
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
