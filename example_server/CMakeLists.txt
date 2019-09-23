@@ -1,22 +1,21 @@
 # CMake build : main application
 
-protobuf_generate_cpp(PROTO_SCRS PROTO_HDRS src/proto/example_service.proto)
-
-add_executable(example_excutable
-        src/main.cpp
-        src/services/example_async_service.h
-        src/services/example_async_service.cpp
-        ${PROTO_SCRS})
-
-target_link_libraries(example_excutable
-        PUBLIC
-        Folly::folly
-        wangle::wangle
-        littleb::littleb)
-
-target_include_directories(example_excutable
-        PUBLIC
-        ${CMAKE_CURRENT_BINARY_DIR})
+#protobuf_generate_cpp(PROTO_SCRS PROTO_HDRS src/proto/example_service.proto)
+#
+#add_executable(example_excutable
+#        src/main.cpp
+#        ${PROTO_SCRS}
+#        )
+#
+#target_link_libraries(example_excutable
+#        PUBLIC
+#        Folly::folly
+#        wangle::wangle
+#        littleb::littleb)
+#
+#target_include_directories(example_excutable
+#        PUBLIC
+#        ${CMAKE_CURRENT_BINARY_DIR})
 #add_executable(example_rpc
 #        src/example_rpc.cpp
 #        #        ${PROTO}_SCRS

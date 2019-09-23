@@ -7,7 +7,7 @@ message RetInfo {
 
 
 message ExampleReq {
-    uint32 example_uint = 1;
+    int32 example_int = 1;
 }
 
 message ExampleResp {

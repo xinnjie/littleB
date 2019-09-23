@@ -12,6 +12,26 @@
 #include <boost/pointer_cast.hpp>
 
 #include "role_info.h"
+/**
+ * use case:
+ * Service class *
+ *  1. Define Service class:
+ *  class ExampleSyncService : public littleB::SyncServiceInterface<ExampleReq, ExampleResp>{
+ *  public:
+ *     ExampleResp operator()(RoleInfo& role, const ExampleReq& request) override;
+ *  }
+ *  2. Register to a CommandManager
+ *  RegisterCommand<ExampleSyncService>(register_manager, cmd_id)
+ *
+ *
+ * Service function *
+ *  1. or Define Service function
+ *  ExampleResp SomeService(RoleInfo& role, const ExampleReq& request);
+ *  2. Register to a CommandManager
+ *  RegisterCommand(register_manager, cmd_id, SomeService)
+ *
+};
+ */
 namespace littleB {
 // 因为需要使用类的多态，所以指针类型是必须的
 using InternalSyncServiceType =
@@ -19,9 +39,12 @@ using InternalSyncServiceType =
 
 using SyncServiceType = std::function<google::protobuf::Message(RoleInfo &, const google::protobuf::Message &)>;
 
-class CommandRegisterManager {
+class CommandManager {
 public:
+    /* 不要使用CommandManager::RegisterCmd, 而应该使用RegisterCommand */
     bool RegisterCmd(uint32_t cmd_id, const InternalSyncServiceType &func);
+    bool IsValidCmd(uint32_t cmd_id);
+    std::unique_ptr<google::protobuf::Message> operator()(uint32_t cmd_id, RoleInfo &role, const google::protobuf::Message &request);
 
 private:
     std::map<uint32_t, InternalSyncServiceType> sync_handlers_;
@@ -60,14 +83,14 @@ InternalSyncServiceType SyncServiceClassDecorator() {
 }
 
 template <typename ReqT, typename RspT>
-bool RegisterCommand(CommandRegisterManager &register_manager, uint32_t cmd_id,
+bool RegisterCommand(CommandManager &register_manager, uint32_t cmd_id,
                      std::function<RspT(RoleInfo &, const ReqT &)> sync_service) {
-    register_manager.RegisterCmd(cmd_id, SyncServiceDecorator(sync_service));
+    return register_manager.RegisterCmd(cmd_id, SyncServiceDecorator(sync_service));
 }
 
 template <typename T>
-bool RegisterCommand(CommandRegisterManager &register_manager, uint32_t cmd_id) {
-    register_manager.RegisterCmd(cmd_id, SyncServiceClassDecorator<T>());
+bool RegisterCommand(CommandManager &register_manager, uint32_t cmd_id) {
+    return register_manager.RegisterCmd(cmd_id, SyncServiceClassDecorator<T>());
 }
 }  // namespace littleB
 

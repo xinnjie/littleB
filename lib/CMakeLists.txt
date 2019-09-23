@@ -24,7 +24,6 @@ target_link_libraries(littleb
         OpenSSL::SSL  # folly&wangle has openssl depencdency, but not link
         Threads::Threads # folly dependency
         Folly::folly
-        gflags::gflags
         protobuf::libprotobuf
         wangle::wangle
         Boost::boost)
