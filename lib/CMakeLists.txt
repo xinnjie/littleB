@@ -5,12 +5,18 @@ project(LITTLEB
         LANGUAGES CXX
         VERSION 0.1.0
         )
-option(BUILD_SHARED_LIBS "Build shared library" OFF) # TODO
 
 protobuf_generate_cpp(PROTO_SCRS PROTO_HDRS example_login.proto)
 add_library(littleb STATIC
         ${PROTO_SCRS}
-        command_distributor.cpp command_distributor.h game_service.cpp game_service.h service_interface.h role_info.h command_register.cpp command_register.h)
+        command_distributor.cpp
+        command_distributor.h
+        game_service.cpp
+        game_service.h
+        service_interface.h
+        role_info.h
+        command_register.cpp
+        command_register.h)
 target_include_directories(littleb
         PUBLIC
         ${CMAKE_CURRENT_BINARY_DIR}

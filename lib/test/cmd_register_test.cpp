@@ -9,16 +9,13 @@
 
 using namespace littleB;
 
-void example_register() {
-
-}
 TEST_CASE( "do register", "[register_manager]" ) {
     CommandManager register_manager;
-    REQUIRE(RegisterCommand<ExampleSyncService>(register_manager, 1));
+    REQUIRE(RegisterSyncCommand<ExampleSyncService>(register_manager, 1));
     ExampleReq req;
     req.set_example_int(10);
     RoleInfo role{1};
-    auto rsp_ptr = boost::dynamic_pointer_cast<ExampleResp>(register_manager(1, role, req));
+    auto rsp_ptr = boost::dynamic_pointer_cast<ExampleResp>(register_manager.RunSyncService(1, role, req));
     REQUIRE(rsp_ptr);
 
     REQUIRE(rsp_ptr->ret().ret_code() == 10);

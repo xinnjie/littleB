@@ -16,14 +16,21 @@
 #target_include_directories(example_excutable
 #        PUBLIC
 #        ${CMAKE_CURRENT_BINARY_DIR})
-#add_executable(example_rpc
-#        src/example_rpc.cpp
-#        #        ${PROTO}_SCRS
-#        )
-#target_link_libraries(example_rpc
-#        folly
-#        protobuf::libprotobuf
-#        wangle)
+add_executable(example_server
+        server_main.cpp
+        #        ${PROTO}_SCRS
+        )
+target_link_libraries(example_server
+        littleb::littleb)
+
+
+add_executable(folly_test
+        test/folly.cpp
+        #        ${PROTO}_SCRS
+        )
+target_link_libraries(folly_test
+        littleb::littleb
+        Catch2::Catch2)
 
 
 add_executable(redis_client_test

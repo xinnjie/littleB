@@ -2,14 +2,10 @@
 
 #include <folly/executors/ThreadedExecutor.h>
 #include <folly/futures/Future.h>
-#include "command_register.h"
-
-#include "services/example_sync_service.h"
-
-
+#define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
+#include <catch2/catch.hpp>
 using namespace folly;
 using namespace std;
-using namespace littleB;
 
 void foo(int x) {
     // do something with x
@@ -33,7 +29,25 @@ void example_folly() {
     cout << "Promise fulfilled" << endl;
 }
 
-int main() {
-    example_folly();
-    return 0;
+class Base {
+public:
+    int i;
+    Base(int i) : i(i) {}
+};
+class Derive : public Base {
+public:
+    int j;
+    Derive(int i, int j) : Base(i), j(j) {}
+};
+
+
+TEST_CASE( "folly inherit test", "[derive & base]" ) {
+    Promise<Derive> derive_promise;
+    Future<Base> base_future = derive_promise.getFuture();
+    REQUIRE_FALSE(base_future.isReady());
+
+    derive_promise.setValue(Derive(1, 2));
+    REQUIRE(base_future.isReady());
+    REQUIRE(base_future.value().i == 1);
+
 }
