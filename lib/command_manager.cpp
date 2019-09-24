@@ -1,8 +1,9 @@
 //
 // Created by xinnjie on 2019/9/23.
 //
-#include "command_register.h"
+#include "command_manager.h"
 #include <cassert>
+
 namespace littleB {
 bool CommandManager::RegisterSyncCmd(uint32_t cmd_id, const InternalSyncServiceType& func) {
     assert(!IsValidCmd(cmd_id));

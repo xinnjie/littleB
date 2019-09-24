@@ -24,6 +24,14 @@ target_link_libraries(example_server
         littleb::littleb)
 
 
+add_executable(summerfun_server
+        summerfun_main.cpp
+        #        ${PROTO}_SCRS
+        )
+target_link_libraries(summerfun_server
+        littleb::littleb)
+
+
 add_executable(folly_test
         test/folly.cpp
         #        ${PROTO}_SCRS

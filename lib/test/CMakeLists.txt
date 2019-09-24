@@ -26,5 +26,17 @@ target_include_directories(cmd_regster_test
         PUBLIC
         ${CMAKE_CURRENT_BINARY_DIR}
         )
+
+
+add_executable(log_test
+        log_test.cpp
+        )
+target_link_libraries(log_test
+        PUBLIC
+        Catch2::Catch2
+        littleb::littleb
+        spdlog::spdlog
+        )
+
 enable_testing()
 #add_test(test1 example_test)

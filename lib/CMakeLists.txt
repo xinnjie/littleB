@@ -15,8 +15,11 @@ add_library(littleb STATIC
         game_service.h
         service_interface.h
         role_info.h
-        command_register.cpp
-        command_register.h)
+        command_manager.cpp
+        command_manager.h
+        handlers/CmdMessageSerializeHandler.cpp
+        handlers/CmdMessageSerializeHandler.h
+        register_helper.h pb_reflection_manager.cpp pb_reflection_manager.h)
 target_include_directories(littleb
         PUBLIC
         ${CMAKE_CURRENT_BINARY_DIR}
@@ -32,7 +35,9 @@ target_link_libraries(littleb
         Folly::folly
         protobuf::libprotobuf
         wangle::wangle
-        Boost::boost)
+        Boost::boost
+        spdlog::spdlog
+        )
 target_compile_options(littleb
         PRIVATE
         -Wall -Wextra)
