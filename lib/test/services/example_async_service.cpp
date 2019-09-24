@@ -6,13 +6,10 @@
 
 using namespace littleB;
 
-//
-//// TODO 代码生成器：用户只需要完成该方法
-//folly::Future<ExampleService::ExampleRespPtr> ExampleService::DoCall(ExampleService::ExampleReqPtr req) {
-//    uint32_t example_uint = req->example_uint();
-//    auto *resp = new ExampleResp();
-//    RetInfo *ret_info = resp->mutable_ret();
-//    ret_info->set_ret_code(0);
-//    ret_info->set_ret_msg("succeed");
-//    return folly::makeFuture(ExampleRespPtr(resp));
-//}
+folly::Future<ExampleResp> ExampleAsyncService::operator()(RoleInfo &role, const ExampleReq &request) {
+    ExampleResp resp;
+    RetInfo *ret_info = resp.mutable_ret();
+    ret_info->set_ret_code(request.example_int());
+    ret_info->set_ret_msg("succeed");
+    return folly::makeFuture(resp);
+}

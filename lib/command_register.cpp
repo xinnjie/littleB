@@ -9,7 +9,7 @@ bool CommandManager::RegisterSyncCmd(uint32_t cmd_id, const InternalSyncServiceT
     auto ret = sync_services_.insert(std::make_pair(cmd_id, func));
     return ret.second;
 }
-std::unique_ptr<google::protobuf::Message> CommandManager::RunSyncService(uint32_t cmd_id, RoleInfo& role,
+MessagePtr CommandManager::RunSyncService(uint32_t cmd_id, RoleInfo& role,
                                                                           const google::protobuf::Message& request) {
     auto iter = sync_services_.find(cmd_id);
     assert(iter != sync_services_.cend());
@@ -19,9 +19,15 @@ std::unique_ptr<google::protobuf::Message> CommandManager::RunSyncService(uint32
 bool CommandManager::IsValidCmd(uint32_t cmd_id) const {
     return sync_services_.count(cmd_id) > 0 || async_services_.count(cmd_id) > 0;
 }
-bool CommandManager::RegisterAsyncCmd(uint32_t cmd_id, const AsyncServiceType& func) {
+bool CommandManager::RegisterAsyncCmd(uint32_t cmd_id, const InternalAsyncServiceType& func) {
     assert(!IsValidCmd(cmd_id));
     auto ret = async_services_.insert(std::make_pair(cmd_id, func));
     return ret.second;
+}
+folly::Future<MessagePtr> CommandManager::RunAsyncService(uint32_t cmd_id, RoleInfo& role, const google::protobuf::Message &request) {
+    auto iter = async_services_.find(cmd_id);
+    assert(iter != async_services_.cend());
+    auto async_service = iter->second;
+    return async_service(role, request);
 }
 }  // namespace littleB
