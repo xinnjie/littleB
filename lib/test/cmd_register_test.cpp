@@ -4,9 +4,9 @@
 #define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
 #include <catch2/catch.hpp>
 #include "command_manager.h"
-#include "pb_reflection_manager.h"
-#include  "register_helper.h"
 #include "example_service.pb.h"
+#include "pb_reflection_manager.h"
+#include "register_helper.h"
 #include "services/example_async_service.h"
 #include "services/example_sync_service.h"
 
@@ -37,6 +37,15 @@ TEST_CASE("do async register", "[async service]") {
     auto rsp_ptr = boost::dynamic_pointer_cast<ExampleResp>(std::move(rsp_future_ptr.value()));
     REQUIRE(rsp_ptr);
 
-     REQUIRE(rsp_ptr->ret().ret_code() == 10);
+    REQUIRE(rsp_ptr->ret().ret_code() == 10);
     REQUIRE(rsp_ptr->ret().ret_msg() == "succeed");
+}
+
+class Foo {};
+TEST_CASE("add pb_reflection", "[pb_reflection]") {
+    PbReflectionManager reflection_manager;
+    REQUIRE(reflection_manager.AddReflection(1, std::make_unique<ExampleReq>(), std::make_unique<ExampleResp>()));
+    auto &req_pb = reflection_manager.GetRequestReflection(1);
+    REQUIRE_THROWS_AS(dynamic_cast<Foo &>(req_pb), std::bad_cast);
+    REQUIRE_NOTHROW(dynamic_cast<ExampleReq&>(req_pb));
 }
