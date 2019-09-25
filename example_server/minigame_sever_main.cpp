@@ -21,17 +21,6 @@ using namespace littleB;
 
 using LittlebPipeline = Pipeline<IOBufQueue &, ServiceTuple>;
 
-// the main logic of our echo server; receives a string and writes it straight
-// back
-class EchoHandler : public HandlerAdapter<std::string> {
-public:
-    void read(Context *ctx, std::string msg) override {
-        std::cout << "handling " << msg << std::endl;
-        write(ctx, msg + "\r\n");
-    }
-};
-
-// where we define the chain of handlers for each messeage received
 class LittleBPipelineFactory : public PipelineFactory<LittlebPipeline> {
 public:
     LittleBPipelineFactory(RoleinfoManager &roleManager, CommandManager &commandManager,
