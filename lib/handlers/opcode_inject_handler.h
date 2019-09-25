@@ -13,6 +13,7 @@ class OpcodeInjectHandler
                              std::pair<uint32_t, std::unique_ptr<folly::IOBuf>>, std::unique_ptr<folly::IOBuf>> {
 public:
     void read(Context* ctx, std::unique_ptr<folly::IOBuf> msg) override;
+
     folly::Future<folly::Unit> write(Context* ctx, std::pair<uint32_t, std::unique_ptr<folly::IOBuf>> msg) override;
 };
 }  // namespace littleB

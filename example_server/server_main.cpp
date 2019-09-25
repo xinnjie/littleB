@@ -9,7 +9,7 @@
 using namespace folly;
 using namespace wangle;
 
-using EchoPipeline = Pipeline<IOBufQueue&, std::string> ;
+using LittlebPipeline = Pipeline<IOBufQueue&, std::string> ;
 
 // the main logic of our echo server; receives a string and writes it straight
 // back
@@ -22,11 +22,11 @@ public:
 };
 
 // where we define the chain of handlers for each messeage received
-class EchoPipelineFactory : public PipelineFactory<EchoPipeline> {
+class LittleBPipelineFactory : public PipelineFactory<LittlebPipeline> {
 public:
-    EchoPipeline::Ptr newPipeline(
+    LittlebPipeline::Ptr newPipeline(
         std::shared_ptr<AsyncTransportWrapper> sock) override {
-        auto pipeline = EchoPipeline::create();
+        auto pipeline = LittlebPipeline::create();
         pipeline->addBack(AsyncSocketHandler(sock));
         pipeline->addBack(LineBasedFrameDecoder(8192));
         pipeline->addBack(StringCodec());
@@ -37,8 +37,8 @@ public:
 };
 
 int main(int argc, char** argv) {
-    ServerBootstrap<EchoPipeline> server;
-    server.childPipeline(std::make_shared<EchoPipelineFactory>());
+    ServerBootstrap<LittlebPipeline> server;
+    server.childPipeline(std::make_shared<LittleBPipelineFactory>());
     server.bind(8009);
     server.waitForStop();
 

@@ -24,11 +24,11 @@ target_link_libraries(example_server
         littleb::littleb)
 
 
-add_executable(summerfun_server
-        summerfun_main.cpp
+add_executable(minigame_server
+        minigame_sever_main.cpp
         #        ${PROTO}_SCRS
         )
-target_link_libraries(summerfun_server
+target_link_libraries(minigame_server
         littleb::littleb)
 
 
