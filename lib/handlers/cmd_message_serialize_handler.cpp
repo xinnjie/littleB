@@ -40,7 +40,9 @@ folly::Future<folly::Unit> CmdMessageSerializeHandler::write(Context* ctx, CmdMe
     std::string out_buf;
     message_ptr->SerializeToString(&out_buf);
     SPDLOG_INFO("[CmdMessageSerializeHandler] -- write {}", out_buf);
-    return ctx->fireWrite(std::make_pair(cmd_id, folly::IOBuf::copyBuffer(out_buf)));
+    return ctx->fireWrite(std::make_pair(
+        cmd_id,
+        folly::IOBuf::copyBuffer(out_buf, PKG_LENGTH_FIELD_SIZE + OPCODE_SIZE)));  // 为长度字段和 cmd_id 字段预留空间
 }
 //写入数据出现异常
 folly::Future<folly::Unit> CmdMessageSerializeHandler::writeException(Context* ctx, folly::exception_wrapper e) {

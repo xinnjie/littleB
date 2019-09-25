@@ -9,9 +9,11 @@
 
 namespace littleB {
 class OpcodeInjectHandler
-    : public wangle::InboundHandler<std::unique_ptr<folly::IOBuf>, std::pair<uint32_t, std::unique_ptr<folly::IOBuf>>> {
+    : public wangle::Handler<std::unique_ptr<folly::IOBuf>, std::pair<uint32_t, std::unique_ptr<folly::IOBuf>>,
+                             std::pair<uint32_t, std::unique_ptr<folly::IOBuf>>, std::unique_ptr<folly::IOBuf>> {
 public:
     void read(Context* ctx, std::unique_ptr<folly::IOBuf> msg) override;
+    folly::Future<folly::Unit> write(Context* ctx, std::pair<uint32_t, std::unique_ptr<folly::IOBuf>> msg) override;
 };
 }  // namespace littleB
 #endif  // LITTLEB_OPCODE_INJECT_HANDLER_H
