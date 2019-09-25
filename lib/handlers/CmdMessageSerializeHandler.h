@@ -9,24 +9,21 @@
 #include "pb_reflection_manager.h"
 
 namespace littleB {
-
-class CmdMessageSerializeHandler
-    : public wangle::Handler<std::unique_ptr<folly::IOBuf>, std::unique_ptr<google::protobuf::Message>,
-                             std::unique_ptr<google::protobuf::Message>, std::unique_ptr<folly::IOBuf> > {
+using CmdMessagePair = std::pair<uint32_t, std::unique_ptr<google::protobuf::Message>>;
+using CmdBufPair = std::pair<uint32_t, std::unique_ptr<folly::IOBuf>>;
+class CmdMessageSerializeHandler : public wangle::Handler<CmdBufPair, CmdMessagePair, CmdMessagePair, CmdBufPair> {
 public:
-    CmdMessageSerializeHandler(PbReflectionManager &reflectionManager) : reflection_manager_(reflectionManager) {}
+    explicit CmdMessageSerializeHandler(PbReflectionManager &reflectionManager) : reflection_manager_(reflectionManager) {}
     //从IObuf中读取数据 到  RpcMessage中 利用 protobuf 进行反序列化 std::unique_ptr<google::protobuf::Message>
-    void read(Context *ctx, std::unique_ptr<folly::IOBuf> msg) override;
-
+    void read(Context *ctx, CmdBufPair msg) override;
     //对端关闭连接
     void readEOF(Context *ctx) override;
 
     //读取数据发生异常
     void readException(Context *ctx, folly::exception_wrapper e) override;
 
-    //从RpcMessage中写数据 到 IOBuf中 利用protobuf进行序列化 得到二进制的RpcMessage
-    folly::Future<folly::Unit> write(Context *ctx, std::unique_ptr<google::protobuf::Message> msg) override;
-
+    //序列化 Message 到 IOBuf中
+    folly::Future<folly::Unit> write(Context *ctx, CmdMessagePair msg) override;
     //写入数据出现异常
     folly::Future<folly::Unit> writeException(Context *ctx, folly::exception_wrapper e) override;
 
@@ -35,7 +32,6 @@ public:
 
 private:
     PbReflectionManager &reflection_manager_;
-
 };
 }  // namespace littleB
 #endif  // LITTLEB_CMDMESSAGESERIALIZEHANDLER_H
