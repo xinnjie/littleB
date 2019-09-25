@@ -9,17 +9,17 @@ project(LITTLEB
 protobuf_generate_cpp(PROTO_SCRS PROTO_HDRS example_login.proto)
 add_library(littleb STATIC
         ${PROTO_SCRS}
-        command_distributor.cpp
-        command_distributor.h
+        handlers/command_distributor.cpp
+        handlers/command_distributor.h
         game_service.cpp
         game_service.h
         service_interface.h
         role_info.h
-        command_manager.cpp
-        command_manager.h
-        handlers/CmdMessageSerializeHandler.cpp
-        handlers/CmdMessageSerializeHandler.h
-        register_helper.h pb_reflection_manager.cpp pb_reflection_manager.h)
+        data_manager/command_manager.cpp
+        data_manager/command_manager.h
+        handlers/cmd_message_serialize_handler.cpp
+        handlers/cmd_message_serialize_handler.h
+        register_helper.h data_manager/pb_reflection_manager.cpp data_manager/pb_reflection_manager.h common_def.h handlers/role_inject_handler.cpp handlers/role_inject_handler.h data_manager/roleinfo_manager.cpp data_manager/roleinfo_manager.h)
 target_include_directories(littleb
         PUBLIC
         ${CMAKE_CURRENT_BINARY_DIR}

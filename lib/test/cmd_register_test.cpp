@@ -3,9 +3,9 @@
 //
 #define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
 #include <catch2/catch.hpp>
-#include "command_manager.h"
+#include "data_manager/command_manager.h"
+#include "data_manager/pb_reflection_manager.h"
 #include "example_service.pb.h"
-#include "pb_reflection_manager.h"
 #include "register_helper.h"
 #include "services/example_async_service.h"
 #include "services/example_sync_service.h"

@@ -7,8 +7,8 @@
 #include <google/protobuf/message.h>
 #include <functional>
 #include <memory>
-#include "command_manager.h"
-#include "pb_reflection_manager.h"
+#include "data_manager/command_manager.h"
+#include "data_manager/pb_reflection_manager.h"
 #include "role_info.h"
 /**
  * use case:

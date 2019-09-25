@@ -10,8 +10,7 @@ bool CommandManager::RegisterSyncCmd(uint32_t cmd_id, const InternalSyncServiceT
     auto ret = sync_services_.insert(std::make_pair(cmd_id, func));
     return ret.second;
 }
-MessagePtr CommandManager::RunSyncService(uint32_t cmd_id, RoleInfo& role,
-                                                                          const google::protobuf::Message& request) {
+MessagePtr CommandManager::RunSyncService(uint32_t cmd_id, RoleInfo& role, const google::protobuf::Message& request) {
     auto iter = sync_services_.find(cmd_id);
     assert(iter != sync_services_.cend());
     auto sync_service = iter->second;
@@ -25,7 +24,8 @@ bool CommandManager::RegisterAsyncCmd(uint32_t cmd_id, const InternalAsyncServic
     auto ret = async_services_.insert(std::make_pair(cmd_id, func));
     return ret.second;
 }
-folly::Future<MessagePtr> CommandManager::RunAsyncService(uint32_t cmd_id, RoleInfo& role, const google::protobuf::Message &request) {
+folly::Future<MessagePtr> CommandManager::RunAsyncService(uint32_t cmd_id, RoleInfo& role,
+                                                          const google::protobuf::Message& request) {
     auto iter = async_services_.find(cmd_id);
     assert(iter != async_services_.cend());
     auto async_service = iter->second;
