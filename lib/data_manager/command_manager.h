@@ -14,7 +14,7 @@
 #include <boost/pointer_cast.hpp>
 
 #include "common_def.h"
-#include "role_info.h"
+#include "role.pb.h"
 
 namespace littleB {
 // 因为需要使用类的多态，所以指针类型是必须的

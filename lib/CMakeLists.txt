@@ -6,7 +6,14 @@ project(LITTLEB
         VERSION 0.1.0
         )
 
-protobuf_generate_cpp(PROTO_SCRS PROTO_HDRS example_login.proto)
+compile_protobuf(PROTO_SCRS PROTO_HDRS
+        SOURCE
+        ${CMAKE_CURRENT_SOURCE_DIR}/proto/role.proto
+        INCLUDE_PATHS
+        ${CMAKE_CURRENT_SOURCE_DIR}/proto
+        CPP_OUT_DIR
+        ${CMAKE_CURRENT_BINARY_DIR})
+
 add_library(littleb STATIC
         ${PROTO_SCRS}
         handlers/command_distributor.cpp
@@ -49,7 +56,7 @@ target_link_libraries(littleb
         )
 target_compile_options(littleb
         PRIVATE
-        -Wall -Wextra)
+        -Wall -Wextra -Wno-unused )
 set_target_properties(littleb
         PROPERTIES
         ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/lib

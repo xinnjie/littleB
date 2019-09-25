@@ -18,7 +18,7 @@ public:
     void read(Context* ctx, ServiceTuple msg) override;
 
 private:
-    CommandManager &command_manager_;
+    CommandManager& command_manager_;
 };
-}
+}  // namespace littleB
 #endif  // LITTLEB_COMMAND_DISTRIBUTOR_H

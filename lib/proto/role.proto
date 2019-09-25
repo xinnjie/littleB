@@ -1,0 +1,12 @@
+syntax="proto3";
+message TaskProgress {
+    int32 main_task_id = 1; // 当前主线任务 id
+}
+
+message BasicInfo {
+    string player_id = 1;
+}
+message RoleInfo {
+    BasicInfo basic_info = 1;
+    TaskProgress progress = 2;
+}

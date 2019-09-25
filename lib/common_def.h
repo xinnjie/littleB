@@ -8,7 +8,7 @@
 #include <google/protobuf/message.h>
 #include <utility>
 #include <tuple>
-#include "role_info.h"
+#include "role.pb.h"
 
 namespace littleB {
 using MessagePtr = std::unique_ptr<google::protobuf::Message>;

@@ -6,7 +6,7 @@
 #define LITTLEB_ROLEINFO_MANAGER_H
 #include <folly/SocketAddress.h>
 #include <map>
-#include "role_info.h"
+#include "role.pb.h"
 namespace littleB {
 /**
  * 使用远端 ip 标识玩家

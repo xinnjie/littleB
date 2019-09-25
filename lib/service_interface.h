@@ -7,7 +7,7 @@
 #include <google/protobuf/message.h>
 #include <wangle/service/Service.h>
 #include <memory>
-#include "role_info.h"
+#include "role.pb.h"
 namespace littleB {
 // TODO Service 之间可以互相调用，这一点决定了 Service 复用性极强
 // TODO AsyncService 的概念基本和 wangle::Service 一致。
