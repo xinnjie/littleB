@@ -19,7 +19,16 @@ add_library(littleb STATIC
         data_manager/command_manager.h
         handlers/cmd_message_serialize_handler.cpp
         handlers/cmd_message_serialize_handler.h
-        register_helper.h data_manager/pb_reflection_manager.cpp data_manager/pb_reflection_manager.h common_def.h handlers/role_inject_handler.cpp handlers/role_inject_handler.h data_manager/roleinfo_manager.cpp data_manager/roleinfo_manager.h)
+        register_helper.h
+        data_manager/pb_reflection_manager.cpp
+        data_manager/pb_reflection_manager.h
+        common_def.h
+        handlers/role_inject_handler.cpp
+        handlers/role_inject_handler.h
+        data_manager/roleinfo_manager.cpp
+        data_manager/roleinfo_manager.h
+        handlers/opcode_inject_handler.cpp
+        handlers/opcode_inject_handler.h)
 target_include_directories(littleb
         PUBLIC
         ${CMAKE_CURRENT_BINARY_DIR}

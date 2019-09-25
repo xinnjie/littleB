@@ -43,13 +43,13 @@ folly::Future<folly::Unit> CmdMessageSerializeHandler::write(Context* ctx, CmdMe
     return ctx->fireWrite(std::make_pair(cmd_id, folly::IOBuf::copyBuffer(out_buf)));
 }
 //写入数据出现异常
- folly::Future<folly::Unit> CmdMessageSerializeHandler::writeException(Context* ctx, folly::exception_wrapper e) {
+folly::Future<folly::Unit> CmdMessageSerializeHandler::writeException(Context* ctx, folly::exception_wrapper e) {
     SPDLOG_WARN("[ServerSerializeHandler] -- write Exception: {}", exceptionStr(e).toStdString());
     return Handler::writeException(ctx, e);
 }
 
- folly::Future<folly::Unit> CmdMessageSerializeHandler::close(Context* ctx) {
-     SPDLOG_INFO("[ServerSerializeHandler] -- pipeline closed");
+folly::Future<folly::Unit> CmdMessageSerializeHandler::close(Context* ctx) {
+    SPDLOG_INFO("[ServerSerializeHandler] -- pipeline closed");
     return Handler::close(ctx);
 }
 

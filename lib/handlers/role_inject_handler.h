@@ -15,7 +15,7 @@ public:
     void read(Context* ctx, CmdMessagePair msg) override;
 
 private:
-    RoleinfoManager &role_manager_;
+    RoleinfoManager& role_manager_;
 };
-}
+}  // namespace littleB
 #endif  // LITTLEB_ROLE_INJECT_HANDLER_H

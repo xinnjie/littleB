@@ -15,21 +15,27 @@ namespace littleB {
  */
 class CmdMessageSerializeHandler : public wangle::Handler<CmdBufPair, CmdMessagePair, CmdMessagePair, CmdBufPair> {
 public:
-    explicit CmdMessageSerializeHandler(PbReflectionManager &reflectionManager) : reflection_manager_(reflectionManager) {}
-    //从 IObuf 中读取数据 到  Message 中, 利用 protobuf 进行反序列化 std::unique_ptr<google::protobuf::Message>
+    explicit CmdMessageSerializeHandler(PbReflectionManager &reflectionManager)
+        : reflection_manager_(reflectionManager) {}
     void read(Context *ctx, CmdBufPair msg) override;
     //对端关闭连接
     void readEOF(Context *ctx) override;
 
-    //读取数据发生异常
+    /**
+     * 读取数据时发生异常, 打印异常信息
+     */
     void readException(Context *ctx, folly::exception_wrapper e) override;
 
-    //序列化 Message 到 IOBuf中
     folly::Future<folly::Unit> write(Context *ctx, CmdMessagePair msg) override;
-    //写入数据出现异常
+
+    /**
+     * 写入数据出现异常, 打印异常信息
+     */
     folly::Future<folly::Unit> writeException(Context *ctx, folly::exception_wrapper e) override;
 
-    //关闭pipeline
+    /**
+     * 关闭pipeline时，打印异常信息
+     */
     folly::Future<folly::Unit> close(Context *ctx) override;
 
 private:
