@@ -21,7 +21,6 @@ add_library(littleb STATIC
         game_service.cpp
         game_service.h
         service_interface.h
-        role_info.h
         data_manager/command_manager.cpp
         data_manager/command_manager.h
         handlers/cmd_message_serialize_handler.cpp
@@ -35,7 +34,9 @@ add_library(littleb STATIC
         data_manager/roleinfo_manager.cpp
         data_manager/roleinfo_manager.h
         handlers/opcode_inject_handler.cpp
-        handlers/opcode_inject_handler.h)
+        handlers/opcode_inject_handler.h
+        sync_redis_wrapper.cpp
+        sync_redis_wrapper.h)
 target_include_directories(littleb
         PUBLIC
         ${CMAKE_CURRENT_BINARY_DIR}
@@ -53,6 +54,7 @@ target_link_libraries(littleb
         wangle::wangle
         Boost::boost
         spdlog::spdlog
+        hiredis
         )
 target_compile_options(littleb
         PRIVATE
