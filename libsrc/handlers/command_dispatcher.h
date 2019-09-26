@@ -2,8 +2,8 @@
 // Created by xinnjie on 2019/9/10.
 //
 
-#ifndef LITTLEB_COMMAND_DISTRIBUTOR_H
-#define LITTLEB_COMMAND_DISTRIBUTOR_H
+#ifndef LITTLEB_COMMAND_DISPATCHER_H
+#define LITTLEB_COMMAND_DISPATCHER_H
 
 #include <wangle/channel/Handler.h>
 #include "common_def.h"
@@ -21,4 +21,4 @@ private:
     CommandManager& command_manager_;
 };
 }  // namespace littleB
-#endif  // LITTLEB_COMMAND_DISTRIBUTOR_H
+#endif  // LITTLEB_COMMAND_DISPATCHER_H

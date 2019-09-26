@@ -25,6 +25,7 @@ public:
 
 private:
     std::map<folly::SocketAddress, std::shared_ptr<RoleInfo>> roles_;
+    // todo: 针对连接 consistent hash到针对单线程的roleinfo_manager。这样线程间不会有冲突
     std::mutex roles_mutex_;
 };
 }  // namespace littleB

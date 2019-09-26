@@ -11,12 +11,12 @@
 #include "data_manager/pb_reflection_manager.h"
 #include "data_manager/roleinfo_manager.h"
 #include "handlers/cmd_message_serialize_handler.h"
-#include "handlers/command_distributor.h"
+#include "handlers/command_dispatcher.h"
 #include "handlers/opcode_inject_handler.h"
 #include "handlers/role_inject_handler.h"
-#include "sync_redis_wrapper.h"
 #include "register_helper.h"
 #include "service/minigame_login_service.h"
+#include "sync_redis_wrapper.h"
 
 using namespace folly;
 using namespace wangle;

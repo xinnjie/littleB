@@ -16,8 +16,8 @@ compile_protobuf(PROTO_SCRS PROTO_HDRS
 
 add_library(littleb STATIC
         ${PROTO_SCRS}
-        handlers/command_distributor.cpp
-        handlers/command_distributor.h
+        handlers/command_dispatcher.cpp
+        handlers/command_dispatcher.h
         service_interface.h
         data_manager/command_manager.cpp
         data_manager/command_manager.h

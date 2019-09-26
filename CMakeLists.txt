@@ -15,7 +15,7 @@ find_package(folly REQUIRED)
 find_package(wangle REQUIRED)
 find_package(fizz REQUIRED)
 add_subdirectory(third_party EXCLUDE_FROM_ALL)
-add_subdirectory(lib)
+add_subdirectory(libsrc)
 add_subdirectory(example_server)
 
 enable_testing()
