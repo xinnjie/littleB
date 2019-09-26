@@ -9,7 +9,6 @@
 #include "example_service.pb.h"
 class ExampleAsyncService : public littleB::AsyncServiceInterface<ExampleReq, ExampleResp> {
 public:
-    ExampleAsyncService(littleB::SyncRedisWrapper& redisWrapper);
     folly::Future<ExampleResp> operator()(RoleInfo& role, const ExampleReq& request) override;
 };
 

@@ -19,12 +19,9 @@ class AsyncServiceInterface {
 public:
     using RequestType = ReqT;
     using ResponseType = RspT;
-    explicit AsyncServiceInterface(SyncRedisWrapper &redisWrapper) : redis_wrapper_(redisWrapper) {}
+    AsyncServiceInterface() = default;
     virtual folly::Future<RspT> operator()(RoleInfo &role, const ReqT &request) = 0;
     virtual ~AsyncServiceInterface() = default;
-
-protected:
-    SyncRedisWrapper &redis_wrapper_;
 };
 
 /* SyncService 为同步 Service */
@@ -33,12 +30,9 @@ class SyncServiceInterface {
 public:
     using RequestType = ReqT;
     using ResponseType = RspT;
-    explicit SyncServiceInterface(SyncRedisWrapper &redisWrapper) : redis_wrapper_(redisWrapper) {}
+    SyncServiceInterface() = default;
     virtual RspT operator()(RoleInfo &role, const ReqT &request) = 0;
     virtual ~SyncServiceInterface() = default;
-
-protected:
-    SyncRedisWrapper &redis_wrapper_;
 };
 
 

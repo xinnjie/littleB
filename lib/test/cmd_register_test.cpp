@@ -9,31 +9,29 @@
 #include "register_helper.h"
 #include "services/example_async_service.h"
 #include "services/example_sync_service.h"
-#include "sync_redis_wrapper.h"
 
 using namespace littleB;
 
 TEST_CASE("do sync register", "[sync service]") {
+    constexpr int MAGIC_NUM = 31;
     CommandManager register_manager;
     PbReflectionManager reflection_manager;
-    SyncRedisWrapper redis_wrapper;
-    REQUIRE(RegisterSyncCommand<ExampleSyncService>(register_manager, reflection_manager, redis_wrapper, 1));
+    REQUIRE(RegisterSyncCommand<ExampleSyncService>(register_manager, reflection_manager, 1, MAGIC_NUM));
     ExampleReq req;
     req.set_example_int(10);
 
     RoleInfo role;
     auto rsp_ptr = boost::dynamic_pointer_cast<ExampleResp>(register_manager.RunSyncService(1, role, req));
     REQUIRE(rsp_ptr);
-
-    REQUIRE(rsp_ptr->ret().ret_code() == 10);
+    // 测试模板可变列表参数是否传递成功
+    REQUIRE(rsp_ptr->ret().ret_code()  == (10 + MAGIC_NUM));
     REQUIRE(rsp_ptr->ret().ret_msg() == "this is example service!");
 }
 
 TEST_CASE("do async register", "[async service]") {
     CommandManager register_manager;
     PbReflectionManager reflection_manager;
-    SyncRedisWrapper redis_wrapper;
-    REQUIRE(RegisterAsyncCommand<ExampleAsyncService>(register_manager, reflection_manager, redis_wrapper, 1));
+    REQUIRE(RegisterAsyncCommand<ExampleAsyncService>(register_manager, reflection_manager, 1));
     ExampleReq req;
     req.set_example_int(10);
     RoleInfo role;

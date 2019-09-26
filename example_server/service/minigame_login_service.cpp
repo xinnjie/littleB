@@ -5,8 +5,6 @@
 #include "minigame_login_service.h"
 #include <spdlog/spdlog.h>
 
-MinigameLoginService::MinigameLoginService(littleB::SyncRedisWrapper& redisWrapper)
-    : SyncServiceInterface(redisWrapper) {}
 R2C_Login MinigameLoginService::operator()(RoleInfo& role, const C2R_Login& request) {
     assert(!role.has_basic_info() && !role.has_progress());
     R2C_Login rsp;
