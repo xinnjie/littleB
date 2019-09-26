@@ -5,7 +5,7 @@
 #include "minigame_login_service.h"
 #include <spdlog/spdlog.h>
 
-R2C_Login MinigameLoginService::operator()(RoleInfo& role, const C2R_Login& request) {
+R2C_Login MinigameFakeLoginService::operator()(RoleInfo& role, const C2R_Login& request) {
     assert(!role.has_basic_info() && !role.has_progress());
     R2C_Login rsp;
     rsp.set_rpcid(request.rpcid());
@@ -20,7 +20,7 @@ R2C_Login MinigameLoginService::operator()(RoleInfo& role, const C2R_Login& requ
     }
     SPDLOG_INFO("user login|username={}|password={}|actual_password={}", request.account(), request.password(), reply->str);
     // TODO 补全 login 逻辑
-    if (!PullRoleInfoFromDB(, username)) {
+    if (!PullRoleInfoFromDB(username)) {
         SPDLOG_WARN("pull role failed when having correct password, something is wrong");
         rsp.set_error(-1);
         rsp.set_message("pull role info failed");
@@ -30,16 +30,16 @@ R2C_Login MinigameLoginService::operator()(RoleInfo& role, const C2R_Login& requ
     rsp.set_message("login success");
     return rsp;
 }
-bool MinigameLoginService::PullRoleInfoFromDB(const folly::SocketAddress& remote_address, const std::string& username) {
+std::shared_ptr<RoleInfo> MinigameFakeLoginService::PullRoleInfoFromDB(const std::string& username) {
     auto reply = redis_wrapper_.RedisCommand("get __role-%s", username.c_str());
     if (reply->type != REDIS_REPLY_STRING) {
         SPDLOG_WARN("role is not array, something wrong happened during registration");
-        return false;
+        return std::shared_ptr<RoleInfo>(nullptr);
     }
     auto role = std::make_shared<RoleInfo>();
     if (!role->ParseFromArray(reply->str, reply->len)) {
         SPDLOG_WARN("decode error");
-        return false;
+        return std::shared_ptr<RoleInfo>(nullptr);
     }
-    return role_manager_.AddRole(remote_address, role);
+    return role;
 }

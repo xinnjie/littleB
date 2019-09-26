@@ -6,8 +6,8 @@
 #define LITTLEB_COMMON_DEF_H
 #include <folly/io/IOBuf.h>
 #include <google/protobuf/message.h>
-#include <utility>
 #include <tuple>
+#include <utility>
 #include "role.pb.h"
 
 namespace littleB {

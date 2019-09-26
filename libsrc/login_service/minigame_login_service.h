@@ -8,13 +8,16 @@
 #include "sync_redis_wrapper.h"
 #include "data_manager/roleinfo_manager.h"
 #include "login.pb.h"
-class MinigameLoginService : public littleB::SyncServiceInterface<C2R_Login, R2C_Login>{
+/**
+ * Fake: 由外部调用 PullRoleInfoFromDB 获取Role, 本身的 operator() 只负责收发协议
+ */
+class MinigameFakeLoginService : public littleB::SyncServiceInterface<C2R_Login, R2C_Login>{
 public:
-    MinigameLoginService(littleB::SyncRedisWrapper& redisWrapper, littleB::RoleinfoManager& roleManager)
+    MinigameFakeLoginService(littleB::SyncRedisWrapper& redisWrapper, littleB::RoleinfoManager& roleManager)
         : redis_wrapper_(redisWrapper), role_manager_(roleManager) {}
     R2C_Login operator()(RoleInfo& role, const C2R_Login& request) override;
 
-    bool PullRoleInfoFromDB(const folly::SocketAddress& remote_address, const std::string& username);
+    std::shared_ptr<RoleInfo> PullRoleInfoFromDB(const std::string& username);
 
 private:
     littleB::SyncRedisWrapper &redis_wrapper_;

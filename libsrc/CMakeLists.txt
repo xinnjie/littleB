@@ -9,6 +9,8 @@ project(LITTLEB
 compile_protobuf(PROTO_SCRS PROTO_HDRS
         SOURCE
         ${CMAKE_CURRENT_SOURCE_DIR}/proto/role.proto
+        ${CMAKE_CURRENT_SOURCE_DIR}/proto/login.proto
+        ${CMAKE_CURRENT_SOURCE_DIR}/proto/cmd_id.proto
         INCLUDE_PATHS
         ${CMAKE_CURRENT_SOURCE_DIR}/proto
         CPP_OUT_DIR
@@ -34,7 +36,10 @@ add_library(littleb STATIC
         handlers/opcode_inject_handler.cpp
         handlers/opcode_inject_handler.h
         sync_redis_wrapper.cpp
-        sync_redis_wrapper.h)
+        sync_redis_wrapper.h
+        login_service/minigame_login_service.cpp
+        login_service/minigame_login_service.h
+        )
 target_include_directories(littleb
         PUBLIC
         ${CMAKE_CURRENT_BINARY_DIR}

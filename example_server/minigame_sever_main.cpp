@@ -14,8 +14,8 @@
 #include "handlers/command_dispatcher.h"
 #include "handlers/opcode_inject_handler.h"
 #include "handlers/role_inject_handler.h"
+#include "login_service/minigame_login_service.h"
 #include "register_helper.h"
-#include "service/minigame_login_service.h"
 #include "sync_redis_wrapper.h"
 
 using namespace folly;
@@ -27,8 +27,11 @@ using LittlebPipeline = Pipeline<IOBufQueue &, ServiceTuple>;
 class LittleBPipelineFactory : public PipelineFactory<LittlebPipeline> {
 public:
     LittleBPipelineFactory(RoleinfoManager &roleManager, CommandManager &commandManager,
-                           PbReflectionManager &reflectionManager)
-        : role_manager_(roleManager), command_manager_(commandManager), reflection_manager_(reflectionManager) {}
+                           PbReflectionManager &reflectionManager, SyncRedisWrapper &redisWrapper)
+        : role_manager_(roleManager),
+          command_manager_(commandManager),
+          reflection_manager_(reflectionManager),
+          redis_wrapper(redisWrapper) {}
     LittlebPipeline::Ptr newPipeline(std::shared_ptr<AsyncTransportWrapper> sock) override {
         auto pipeline = LittlebPipeline::create();
         pipeline->addBack(AsyncSocketHandler(sock));
@@ -36,7 +39,7 @@ public:
         pipeline->addBack(LengthFieldPrepender(4, 0, false, true));
         pipeline->addBack(OpcodeInjectHandler());
         pipeline->addBack(CmdMessageSerializeHandler(reflection_manager_));
-        pipeline->addBack(RoleInjectHandler(role_manager_));
+        pipeline->addBack(RoleInjectHandler(role_manager_, redis_wrapper));
         pipeline->addBack(CommandDistributor(command_manager_));
         pipeline->finalize();
         return pipeline;
@@ -46,6 +49,7 @@ private:
     RoleinfoManager &role_manager_;
     CommandManager &command_manager_;
     PbReflectionManager &reflection_manager_;
+    SyncRedisWrapper &redis_wrapper;
 };
 
 int main(int argc, char **argv) {
@@ -54,8 +58,8 @@ int main(int argc, char **argv) {
     CommandManager command_manager;
     PbReflectionManager reflection_manager;
     SyncRedisWrapper redis_wrapper;
-    redis_wrapper.Connect("127.0.0.1", 6379, timeval{ 1, 500000 });
-    RegisterSyncCommand<MinigameLoginService>(command_manager, reflection_manager, 31, redis_wrapper);
+    redis_wrapper.Connect("127.0.0.1", 6379, timeval{1, 500000});
+    //    RegisterSyncCommand<MinigameLoginService>(command_manager, reflection_manager, 31, redis_wrapper);
     server.childPipeline(std::make_shared<LittleBPipelineFactory>(role_manager, command_manager, reflection_manager));
     server.bind(8009);
     server.waitForStop();
