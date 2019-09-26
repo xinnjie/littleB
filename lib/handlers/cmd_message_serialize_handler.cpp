@@ -37,12 +37,13 @@ void CmdMessageSerializeHandler::readException(Context* ctx, folly::exception_wr
 folly::Future<folly::Unit> CmdMessageSerializeHandler::write(Context* ctx, CmdMessagePair msg) {
     auto message_ptr = std::move(msg.second);
     uint32_t cmd_id = msg.first;
-    std::string out_buf;
-    message_ptr->SerializeToString(&out_buf);
-    SPDLOG_INFO("[CmdMessageSerializeHandler] -- write {}", out_buf);
+    auto buffer = folly::IOBuf::create(message_ptr->ByteSizeLong() + PKG_LENGTH_FIELD_SIZE + OPCODE_SIZE);
+    buffer->advance(PKG_LENGTH_FIELD_SIZE + OPCODE_SIZE);
+    assert(buffer->headroom() == PKG_LENGTH_FIELD_SIZE + OPCODE_SIZE);
+    message_ptr->SerializeToArray(buffer->writableData(), message_ptr->ByteSizeLong());
     return ctx->fireWrite(std::make_pair(
         cmd_id,
-        folly::IOBuf::copyBuffer(out_buf, PKG_LENGTH_FIELD_SIZE + OPCODE_SIZE)));  // 为长度字段和 cmd_id 字段预留空间
+        std::move(buffer)));  // 为长度字段和 cmd_id 字段预留空间
 }
 //写入数据出现异常
 folly::Future<folly::Unit> CmdMessageSerializeHandler::writeException(Context* ctx, folly::exception_wrapper e) {
