@@ -6,9 +6,9 @@
 
 #include "data_manager/pb_reflection_manager.h"
 #include "data_manager/roleinfo_manager.h"
+#include "role.pb.h"
 #include "service/minigame_login_service.h"
 #include "sync_redis_wrapper.h"
-#include "role.pb.h"
 
 using namespace littleB;
 

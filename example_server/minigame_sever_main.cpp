@@ -55,7 +55,7 @@ int main(int argc, char **argv) {
     PbReflectionManager reflection_manager;
     SyncRedisWrapper redis_wrapper;
     redis_wrapper.Connect("127.0.0.1", 6379, timeval{ 1, 500000 });
-    RegisterSyncCommand<MinigameLoginService>(command_manager, reflection_manager, redis_wrapper, 31);
+    RegisterSyncCommand<MinigameLoginService>(command_manager, reflection_manager, 31, redis_wrapper);
     server.childPipeline(std::make_shared<LittleBPipelineFactory>(role_manager, command_manager, reflection_manager));
     server.bind(8009);
     server.waitForStop();

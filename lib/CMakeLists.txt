@@ -18,8 +18,6 @@ add_library(littleb STATIC
         ${PROTO_SCRS}
         handlers/command_distributor.cpp
         handlers/command_distributor.h
-        game_service.cpp
-        game_service.h
         service_interface.h
         data_manager/command_manager.cpp
         data_manager/command_manager.h

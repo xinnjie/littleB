@@ -48,8 +48,8 @@ InternalSyncServiceType SyncServiceDecorator(std::function<RspT(RoleInfo &, cons
 }
 
 template <typename T, typename... ArgTypes>
-InternalSyncServiceType SyncServiceClassDecorator(ArgTypes... args) {
-    auto sync_service2 = [args...](RoleInfo &role, const google::protobuf::Message &req) -> MessagePtr {
+InternalSyncServiceType SyncServiceClassDecorator(ArgTypes &... args) {
+    auto sync_service2 = [&args...](RoleInfo &role, const google::protobuf::Message &req) -> MessagePtr {
         using ReqT = typename T::RequestType;
         using RspT = typename T::ResponseType;
         T sync_service{args...};
@@ -66,12 +66,12 @@ InternalSyncServiceType SyncServiceClassDecorator(ArgTypes... args) {
 }
 
 template <typename T, typename... ArgTypes>
-InternalAsyncServiceType AsyncServiceClassDecorator(ArgTypes... args) {
-    auto async_service2 = [args...](RoleInfo &role,
-                                           const google::protobuf::Message &req) -> folly::Future<MessagePtr> {
+InternalAsyncServiceType AsyncServiceClassDecorator(ArgTypes &... args) {
+    auto async_service2 = [&args...](RoleInfo &role,
+                                     const google::protobuf::Message &req) -> folly::Future<MessagePtr> {
         using ReqT = typename T::RequestType;
         using RspT = typename T::ResponseType;
-        T async_service{args...};
+        T async_service{std::forward(args...)};
         const auto &derived_req = dynamic_cast<const ReqT &>(req);
         folly::Future<RspT> rsp_future = async_service(role, derived_req);
         folly::Future<MessagePtr> internal_rsp_future =
@@ -95,13 +95,15 @@ InternalAsyncServiceType AsyncServiceClassDecorator(ArgTypes... args) {
 // TODO 将参数改为 CommandManager &, CommandManager &, uint32_t cmd_id, Args...
 //      这样就不需要限制 ServiceInterface， 不断增加成员变量（因为很多 Service 都由各自需要的资源）
 template <typename T, typename... ArgTypes>
-bool RegisterSyncCommand(CommandManager &register_manager, PbReflectionManager &reflection_manager, uint32_t cmd_id, ArgTypes... args) {
+bool RegisterSyncCommand(CommandManager &register_manager, PbReflectionManager &reflection_manager, uint32_t cmd_id,
+                         ArgTypes &... args) {
     return register_manager.RegisterSyncCmd(cmd_id, SyncServiceClassDecorator<T, ArgTypes...>(args...)) &&
            reflection_manager.AddReflection(cmd_id, std::make_unique<typename T::RequestType>(),
                                             std::make_unique<typename T::ResponseType>());
 }
 template <typename T, typename... ArgTypes>
-bool RegisterAsyncCommand(CommandManager &register_manager, PbReflectionManager &reflection_manager, uint32_t cmd_id, ArgTypes... args) {
+bool RegisterAsyncCommand(CommandManager &register_manager, PbReflectionManager &reflection_manager, uint32_t cmd_id,
+                          ArgTypes &... args) {
     return register_manager.RegisterAsyncCmd(cmd_id, AsyncServiceClassDecorator<T, ArgTypes...>(args...)) &&
            reflection_manager.AddReflection(cmd_id, std::make_unique<typename T::RequestType>(),
                                             std::make_unique<typename T::ResponseType>());
