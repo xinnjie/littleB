@@ -17,12 +17,14 @@ using RedisReplyPtr = std::unique_ptr<redisReply, decltype(&freeReplyObject)>;
 class SyncRedisWrapper {
 public:
     redisContext &Connect(std::string hostname, int port, timeval timeout);
+    SyncRedisWrapper() : redis_ptr_(nullptr, &redisFree) {}
+
     template<typename... ArgTypes>
     RedisReplyPtr RedisCommand(const std::string& format, ArgTypes... args) {
         assert(redis_ptr_->err == 0);
-        redisReply *reply = redisCommand(redis_ptr_.get(), format.c_str(), args...);
+        redisReply *reply = reinterpret_cast<redisReply*>(redisCommand(redis_ptr_.get(), format.c_str(), args...));
         RedisReplyPtr reply_ptr = RedisReplyPtr(reply, &freeReplyObject);
-        return std::move(reply_ptr);
+        return reply_ptr;
     }
 private:
     //    timeval timeout_;

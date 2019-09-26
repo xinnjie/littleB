@@ -13,3 +13,4 @@ folly::Future<ExampleResp> ExampleAsyncService::operator()(RoleInfo &role, const
     ret_info->set_ret_msg("succeed");
     return folly::makeFuture(resp);
 }
+ExampleAsyncService::ExampleAsyncService(SyncRedisWrapper &redisWrapper) : AsyncServiceInterface(redisWrapper) {}

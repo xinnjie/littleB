@@ -9,3 +9,4 @@ ExampleResp ExampleSyncService::operator()(RoleInfo& role, const ExampleReq& req
     rsp.mutable_ret()->set_ret_msg("this is example service!");
     return rsp;
 }
+ExampleSyncService::ExampleSyncService(littleB::SyncRedisWrapper& redisWrapper) : SyncServiceInterface(redisWrapper) {}

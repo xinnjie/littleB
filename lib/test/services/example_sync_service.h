@@ -8,6 +8,7 @@
 #include "service_interface.h"
 class ExampleSyncService : public littleB::SyncServiceInterface<ExampleReq, ExampleResp>{
 public:
+    ExampleSyncService(littleB::SyncRedisWrapper& redisWrapper);
     ExampleResp operator()(RoleInfo& role, const ExampleReq& request) override;
 };
 

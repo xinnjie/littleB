@@ -9,7 +9,8 @@
 #include <memory>
 #include "data_manager/command_manager.h"
 #include "data_manager/pb_reflection_manager.h"
-#include "role_info.h"
+#include "role.pb.h"
+#include "sync_redis_wrapper.h"
 /**
  * use case:
  * Service class *
@@ -47,11 +48,11 @@ InternalSyncServiceType SyncServiceDecorator(std::function<RspT(RoleInfo &, cons
 }
 
 template <typename T>
-InternalSyncServiceType SyncServiceClassDecorator() {
-    auto sync_service2 = [](RoleInfo &role, const google::protobuf::Message &req) -> MessagePtr {
+InternalSyncServiceType SyncServiceClassDecorator(SyncRedisWrapper &redis_wrapper) {
+    auto sync_service2 = [&redis_wrapper](RoleInfo &role, const google::protobuf::Message &req) -> MessagePtr {
         using ReqT = typename T::RequestType;
         using RspT = typename T::ResponseType;
-        T sync_service{};
+        T sync_service{redis_wrapper};
         // TODO 为了好看的 API 多了一次拷贝，但是感觉很难优化，因为本身 rsp 不是在堆上的
         SPDLOG_INFO("request={}", req.ShortDebugString());
         const auto &derived_req = dynamic_cast<const ReqT &>(req);
@@ -65,11 +66,11 @@ InternalSyncServiceType SyncServiceClassDecorator() {
 }
 
 template <typename T>
-InternalAsyncServiceType AsyncServiceClassDecorator() {
-    auto async_service2 = [](RoleInfo &role, const google::protobuf::Message &req) -> folly::Future<MessagePtr> {
+InternalAsyncServiceType AsyncServiceClassDecorator(SyncRedisWrapper &redis_wrapper) {
+    auto async_service2 = [&redis_wrapper](RoleInfo &role, const google::protobuf::Message &req) -> folly::Future<MessagePtr> {
         using ReqT = typename T::RequestType;
         using RspT = typename T::ResponseType;
-        T async_service{};
+        T async_service{redis_wrapper};
         const auto &derived_req = dynamic_cast<const ReqT &>(req);
         folly::Future<RspT> rsp_future = async_service(role, derived_req);
         folly::Future<MessagePtr> internal_rsp_future =
@@ -92,14 +93,14 @@ InternalAsyncServiceType AsyncServiceClassDecorator() {
 //}
 
 template <typename T>
-bool RegisterSyncCommand(CommandManager &register_manager, PbReflectionManager &reflection_manager, uint32_t cmd_id) {
-    return register_manager.RegisterSyncCmd(cmd_id, SyncServiceClassDecorator<T>()) &&
+bool RegisterSyncCommand(CommandManager &register_manager, PbReflectionManager &reflection_manager, SyncRedisWrapper &redis_wrapper, uint32_t cmd_id) {
+    return register_manager.RegisterSyncCmd(cmd_id, SyncServiceClassDecorator<T>(redis_wrapper)) &&
            reflection_manager.AddReflection(cmd_id, std::make_unique<typename T::RequestType>(),
                                             std::make_unique<typename T::ResponseType>());
 }
 template <typename T>
-bool RegisterAsyncCommand(CommandManager &register_manager, PbReflectionManager &reflection_manager, uint32_t cmd_id) {
-    return register_manager.RegisterAsyncCmd(cmd_id, AsyncServiceClassDecorator<T>()) &&
+bool RegisterAsyncCommand(CommandManager &register_manager, PbReflectionManager &reflection_manager, SyncRedisWrapper &redis_wrapper, uint32_t cmd_id) {
+    return register_manager.RegisterAsyncCmd(cmd_id, AsyncServiceClassDecorator<T>(redis_wrapper)) &&
               reflection_manager.AddReflection(cmd_id, std::make_unique<typename T::RequestType>(),
                                             std::make_unique<typename T::ResponseType>());
 }

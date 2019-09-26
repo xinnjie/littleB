@@ -9,16 +9,19 @@
 #include "register_helper.h"
 #include "services/example_async_service.h"
 #include "services/example_sync_service.h"
+#include "sync_redis_wrapper.h"
 
 using namespace littleB;
 
 TEST_CASE("do sync register", "[sync service]") {
     CommandManager register_manager;
     PbReflectionManager reflection_manager;
-    REQUIRE(RegisterSyncCommand<ExampleSyncService>(register_manager, reflection_manager, 1));
+    SyncRedisWrapper redis_wrapper;
+    REQUIRE(RegisterSyncCommand<ExampleSyncService>(register_manager, reflection_manager, redis_wrapper, 1));
     ExampleReq req;
     req.set_example_int(10);
-    RoleInfo role{1};
+
+    RoleInfo role;
     auto rsp_ptr = boost::dynamic_pointer_cast<ExampleResp>(register_manager.RunSyncService(1, role, req));
     REQUIRE(rsp_ptr);
 
@@ -29,10 +32,11 @@ TEST_CASE("do sync register", "[sync service]") {
 TEST_CASE("do async register", "[async service]") {
     CommandManager register_manager;
     PbReflectionManager reflection_manager;
-    REQUIRE(RegisterAsyncCommand<ExampleAsyncService>(register_manager, reflection_manager, 1));
+    SyncRedisWrapper redis_wrapper;
+    REQUIRE(RegisterAsyncCommand<ExampleAsyncService>(register_manager, reflection_manager, redis_wrapper, 1));
     ExampleReq req;
     req.set_example_int(10);
-    RoleInfo role{1};
+    RoleInfo role;
     auto rsp_future_ptr = (register_manager.RunAsyncService(1, role, req));
     auto rsp_ptr = boost::dynamic_pointer_cast<ExampleResp>(std::move(rsp_future_ptr.value()));
     REQUIRE(rsp_ptr);

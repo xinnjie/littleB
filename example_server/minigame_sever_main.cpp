@@ -14,6 +14,7 @@
 #include "handlers/command_distributor.h"
 #include "handlers/opcode_inject_handler.h"
 #include "handlers/role_inject_handler.h"
+#include "sync_redis_wrapper.h"
 
 using namespace folly;
 using namespace wangle;
@@ -50,6 +51,8 @@ int main(int argc, char **argv) {
     RoleinfoManager role_manager;
     CommandManager command_manager;
     PbReflectionManager reflection_manager;
+    SyncRedisWrapper redis_wrapper;
+    redis_wrapper.Connect("127.0.0.1", 6379, timeval{ 1, 500000 });
     server.childPipeline(std::make_shared<LittleBPipelineFactory>(role_manager, command_manager, reflection_manager));
     server.bind(8009);
     server.waitForStop();

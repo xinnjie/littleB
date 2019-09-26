@@ -8,6 +8,7 @@
 #include <wangle/service/Service.h>
 #include <memory>
 #include "role.pb.h"
+#include "sync_redis_wrapper.h"
 namespace littleB {
 // TODO Service 之间可以互相调用，这一点决定了 Service 复用性极强
 // TODO AsyncService 的概念基本和 wangle::Service 一致。
@@ -18,9 +19,12 @@ class AsyncServiceInterface {
 public:
     using RequestType = ReqT;
     using ResponseType = RspT;
-    AsyncServiceInterface() = default;
+    explicit AsyncServiceInterface(SyncRedisWrapper &redisWrapper) : redis_wrapper_(redisWrapper) {}
     virtual folly::Future<RspT> operator()(RoleInfo &role, const ReqT &request) = 0;
     virtual ~AsyncServiceInterface() = default;
+
+protected:
+    SyncRedisWrapper &redis_wrapper_;
 };
 
 /* SyncService 为同步 Service */
@@ -29,8 +33,12 @@ class SyncServiceInterface {
 public:
     using RequestType = ReqT;
     using ResponseType = RspT;
+    explicit SyncServiceInterface(SyncRedisWrapper &redisWrapper) : redis_wrapper_(redisWrapper) {}
     virtual RspT operator()(RoleInfo &role, const ReqT &request) = 0;
     virtual ~SyncServiceInterface() = default;
+
+protected:
+    SyncRedisWrapper &redis_wrapper_;
 };
 
 
