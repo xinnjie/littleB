@@ -51,7 +51,23 @@ private:
     PbReflectionManager &reflection_manager_;
     SyncRedisWrapper &redis_wrapper;
 };
-
+void prepareAndCheck(SyncRedisWrapper &redis_wrapper) {
+    assert(redis_wrapper.RedisCommand("set __password_%s %s", "hello", "world")->type == REDIS_REPLY_STATUS);
+    RoleInfo role;
+    auto basic_ptr = role.mutable_basic_info();
+    basic_ptr->set_player_id("1234567");
+    auto progress_ptr = role.mutable_progress();
+    progress_ptr->set_main_task_id(99);
+    std::string buf;
+    assert(role.SerializeToString(&buf));
+    assert(redis_wrapper.RedisCommand("set __role_%s %b", "hello", buf.c_str(), role.ByteSizeLong()));
+    auto reply = redis_wrapper.RedisCommand("get __role_%s", "hello");
+    assert(reply->type == REDIS_REPLY_STRING);
+    RoleInfo query_role;
+    query_role.ParseFromArray(reply->str, reply->len);
+    assert(query_role.basic_info().player_id() == query_role.basic_info().player_id());
+    assert(query_role.progress().main_task_id() == query_role.progress().main_task_id());
+}
 int main(int argc, char **argv) {
     ServerBootstrap<LittlebPipeline> server;
     RoleinfoManager role_manager;
@@ -59,8 +75,12 @@ int main(int argc, char **argv) {
     PbReflectionManager reflection_manager;
     SyncRedisWrapper redis_wrapper;
     redis_wrapper.Connect("127.0.0.1", 6379, timeval{1, 500000});
+
+    prepareAndCheck(redis_wrapper);
+
     //    RegisterSyncCommand<MinigameLoginService>(command_manager, reflection_manager, 31, redis_wrapper);
-    server.childPipeline(std::make_shared<LittleBPipelineFactory>(role_manager, command_manager, reflection_manager));
+    server.childPipeline(
+        std::make_shared<LittleBPipelineFactory>(role_manager, command_manager, reflection_manager, redis_wrapper));
     server.bind(8009);
     server.waitForStop();
 
