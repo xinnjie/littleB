@@ -14,7 +14,6 @@
 #include "handlers/command_dispatcher.h"
 #include "handlers/opcode_inject_handler.h"
 #include "handlers/role_inject_handler.h"
-#include "login_service/minigame_login_service.h"
 #include "register_helper.h"
 #include "sync_redis_wrapper.h"
 

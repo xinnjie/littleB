@@ -18,5 +18,7 @@ using ServiceTuple = std::tuple<uint32_t, std::shared_ptr<RoleInfo>, MessagePtr>
 // TODO  按照PKG_LENGTH_FIELD_SIZE、OPCODE_SIZE调整 写入网络包中前置字段大小
 constexpr uint32_t PKG_LENGTH_FIELD_SIZE = 4;
 constexpr uint32_t OPCODE_SIZE = 4;
+
+static_assert(OPCODE_SIZE == 4 || OPCODE_SIZE == 2, "opcode should be uint32_t or uint16_t");
 }  // namespace littleB
 #endif  // LITTLEB_COMMON_DEF_H
