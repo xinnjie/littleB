@@ -71,7 +71,7 @@ InternalAsyncServiceType AsyncServiceClassDecorator(ArgTypes &... args) {
                                      const google::protobuf::Message &req) -> folly::Future<MessagePtr> {
         using ReqT = typename T::RequestType;
         using RspT = typename T::ResponseType;
-        T async_service{std::forward(args...)};
+        T async_service{args...};
         const auto &derived_req = dynamic_cast<const ReqT &>(req);
         folly::Future<RspT> rsp_future = async_service(role, derived_req);
         folly::Future<MessagePtr> internal_rsp_future =
