@@ -23,14 +23,43 @@ add_executable(example_server
 target_link_libraries(example_server
         littleb::littleb)
 
+compile_protobuf(PROTO_SCRS PROTO_HDRS
+        SOURCE
+        ${CMAKE_CURRENT_SOURCE_DIR}/proto/login.proto
+        INCLUDE_PATHS
+        ${CMAKE_CURRENT_SOURCE_DIR}/proto
+        CPP_OUT_DIR
+        ${CMAKE_CURRENT_BINARY_DIR}
+        )
+set(MINIGAME_SRC
+        ${PROTO_SCRS}
+        service/minigame_login_service.cpp
+        service/minigame_login_service.h
+        )
 
 add_executable(minigame_server
         minigame_sever_main.cpp
-        #        ${PROTO}_SCRS
+        ${MINIGAME_SRC}
+        )
+target_include_directories(minigame_server
+        PUBLIC
+        ${CMAKE_CURRENT_BINARY_DIR}
         )
 target_link_libraries(minigame_server
         littleb::littleb)
 
+add_executable(service_login_test
+        test/service_login_test.cpp
+        ${MINIGAME_SRC}
+        )
+target_include_directories(service_login_test
+        PUBLIC
+        ${CMAKE_CURRENT_BINARY_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        )
+target_link_libraries(service_login_test
+        littleb::littleb
+        Catch2::Catch2)
 
 add_executable(folly_test
         test/folly.cpp

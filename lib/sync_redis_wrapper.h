@@ -7,6 +7,7 @@
 #include <hiredis.h>
 #include <spdlog/spdlog.h>
 #include <cstdlib>
+#include <mutex>
 namespace littleB {
 /**
  * 同步方式的 redis 接入，有点挫
@@ -21,13 +22,15 @@ public:
 
     template<typename... ArgTypes>
     RedisReplyPtr RedisCommand(const std::string& format, ArgTypes... args) {
+        std::lock_guard<std::mutex> guard(redis_lock_);
         assert(redis_ptr_->err == 0);
         redisReply *reply = reinterpret_cast<redisReply*>(redisCommand(redis_ptr_.get(), format.c_str(), args...));
         RedisReplyPtr reply_ptr = RedisReplyPtr(reply, &freeReplyObject);
         return reply_ptr;
     }
 private:
-    //    timeval timeout_;
+    // redis 同步接口本身不是线程安全的，需要加锁
+    std::mutex redis_lock_;
     RedisContextPtr redis_ptr_;
 };
 }  // namespace littleB

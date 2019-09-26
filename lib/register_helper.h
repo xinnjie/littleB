@@ -67,7 +67,8 @@ InternalSyncServiceType SyncServiceClassDecorator(SyncRedisWrapper &redis_wrappe
 
 template <typename T>
 InternalAsyncServiceType AsyncServiceClassDecorator(SyncRedisWrapper &redis_wrapper) {
-    auto async_service2 = [&redis_wrapper](RoleInfo &role, const google::protobuf::Message &req) -> folly::Future<MessagePtr> {
+    auto async_service2 = [&redis_wrapper](RoleInfo &role,
+                                           const google::protobuf::Message &req) -> folly::Future<MessagePtr> {
         using ReqT = typename T::RequestType;
         using RspT = typename T::ResponseType;
         T async_service{redis_wrapper};
@@ -84,24 +85,27 @@ InternalAsyncServiceType AsyncServiceClassDecorator(SyncRedisWrapper &redis_wrap
     return async_service2;
 }
 
-//template <typename ReqT, typename RspT,
+// template <typename ReqT, typename RspT,
 //          typename std::enable_if<std::is_base_of<google::protobuf::Message, ReqT>::value>::type = 0,
 //          typename std::enable_if<std::is_base_of<google::protobuf::Message, RspT>::value>::type = 0>
-//bool RegisterSyncCommand(CommandManager &register_manager, uint32_t cmd_id,
+// bool RegisterSyncCommand(CommandManager &register_manager, uint32_t cmd_id,
 //                         std::function<RspT(RoleInfo &, const ReqT &)> sync_service) {
 //    return register_manager.RegisterSyncCmd(cmd_id, SyncServiceDecorator(sync_service));
 //}
-
+// TODO 将参数改为 CommandManager &, CommandManager &, uint32_t cmd_id, Args...
+//      这样就不需要限制 ServiceInterface， 不断增加成员变量（因为很多 Service 都由各自需要的资源）
 template <typename T>
-bool RegisterSyncCommand(CommandManager &register_manager, PbReflectionManager &reflection_manager, SyncRedisWrapper &redis_wrapper, uint32_t cmd_id) {
+bool RegisterSyncCommand(CommandManager &register_manager, PbReflectionManager &reflection_manager,
+                         SyncRedisWrapper &redis_wrapper, uint32_t cmd_id) {
     return register_manager.RegisterSyncCmd(cmd_id, SyncServiceClassDecorator<T>(redis_wrapper)) &&
            reflection_manager.AddReflection(cmd_id, std::make_unique<typename T::RequestType>(),
                                             std::make_unique<typename T::ResponseType>());
 }
 template <typename T>
-bool RegisterAsyncCommand(CommandManager &register_manager, PbReflectionManager &reflection_manager, SyncRedisWrapper &redis_wrapper, uint32_t cmd_id) {
+bool RegisterAsyncCommand(CommandManager &register_manager, PbReflectionManager &reflection_manager,
+                          SyncRedisWrapper &redis_wrapper, uint32_t cmd_id) {
     return register_manager.RegisterAsyncCmd(cmd_id, AsyncServiceClassDecorator<T>(redis_wrapper)) &&
-              reflection_manager.AddReflection(cmd_id, std::make_unique<typename T::RequestType>(),
+           reflection_manager.AddReflection(cmd_id, std::make_unique<typename T::RequestType>(),
                                             std::make_unique<typename T::ResponseType>());
 }
 }  // namespace littleB
