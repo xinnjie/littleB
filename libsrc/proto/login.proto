@@ -1,5 +1,5 @@
 syntax = "proto3";
-// minigame 客户端之前有一个 c# 写的服务器，已经对接好了，这里为了配合客户端，格式完全按照原来的做
+// minigame 客户端是一个 c# 写的既能当客户端又能当服务器的厉害东西，这里为了配合客户端，格式完全按照原来的做
 message C2R_Login // IRequest
 {
     int32 RpcId = 90;

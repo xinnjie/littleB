@@ -21,7 +21,7 @@ void littleB::RoleInjectHandler::read(Context *ctx, littleB::CmdMessagePair msg)
             SPDLOG_INFO("username={}|address={} login and has pulled role data", req->account(), addr.describe());
         }
         std::unique_ptr<R2C_Login> rsp = std::make_unique<R2C_Login>();
-        *rsp = login_service(empty_role, *req);
+        rsp->CopyFrom(login_service(empty_role, *req));
         ctx->fireWrite(std::make_pair(cmd_id, std::move(rsp)));
         return;
     }

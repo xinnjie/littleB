@@ -15,7 +15,7 @@ class MinigameFakeLoginService : public littleB::SyncServiceInterface<C2R_Login,
 public:
 //    MinigameFakeLoginService(littleB::SyncRedisWrapper& redisWrapper, littleB::RoleinfoManager& roleManager)
 //        : redis_wrapper_(redisWrapper), role_manager_(roleManager) {}
-    MinigameFakeLoginService(littleB::SyncRedisWrapper& redisWrapper) : redis_wrapper_(redisWrapper) {}
+    explicit MinigameFakeLoginService(littleB::SyncRedisWrapper& redisWrapper) : redis_wrapper_(redisWrapper) {}
     R2C_Login operator()(RoleInfo& role, const C2R_Login& request) override;
 
     std::shared_ptr<RoleInfo> PullRoleInfoFromDB(const std::string& username);
