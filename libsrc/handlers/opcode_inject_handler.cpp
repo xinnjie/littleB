@@ -10,12 +10,12 @@ void OpcodeInjectHandler::read(Context *ctx, std::unique_ptr<folly::IOBuf> msg) 
     uint32_t cmd_id = 0;
     if (OPCODE_SIZE == 4) {
         cmd_id = *reinterpret_cast<const uint32_t *>(msg->data());
-        msg->advance(sizeof(uint32_t));
+        msg->trimStart(sizeof(uint32_t));
     } else {
         cmd_id = *reinterpret_cast<const uint16_t *>(msg->data());
-        msg->advance(sizeof(uint16_t));
+        msg->trimStart(sizeof(uint16_t));
     }
-    SPDLOG_TRACE("message incomming cmd_id={}", cmd_id);
+    SPDLOG_INFO("message incomming cmd_id={}", cmd_id);
     ctx->fireRead(std::make_pair(cmd_id, std::move(msg)));
 }
 folly::Future<folly::Unit> OpcodeInjectHandler::write(Context *ctx,

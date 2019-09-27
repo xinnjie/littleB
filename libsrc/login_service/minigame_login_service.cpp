@@ -12,7 +12,7 @@ R2C_Login MinigameFakeLoginService::operator()(RoleInfo& role, const C2R_Login& 
 
     const std::string& username = request.account();
     const std::string& password = request.password();
-    auto reply = redis_wrapper_.RedisCommand("get __password-%s", username.c_str());
+    auto reply = redis_wrapper_.RedisCommand("get __password_%s", username.c_str());
     if (reply->type != REDIS_REPLY_STRING) {
         SPDLOG_INFO("user login: not registered |username={}|password={}", request.account(), request.password());
         rsp.set_error(-1);
@@ -31,9 +31,9 @@ R2C_Login MinigameFakeLoginService::operator()(RoleInfo& role, const C2R_Login& 
     return rsp;
 }
 std::shared_ptr<RoleInfo> MinigameFakeLoginService::PullRoleInfoFromDB(const std::string& username) {
-    auto reply = redis_wrapper_.RedisCommand("get __role-%s", username.c_str());
+    auto reply = redis_wrapper_.RedisCommand("get __role_%s", username.c_str());
     if (reply->type != REDIS_REPLY_STRING) {
-        SPDLOG_WARN("role is not array, something wrong happened during registration");
+        SPDLOG_WARN("no role in DB, something wrong happened during registration");
         return std::shared_ptr<RoleInfo>(nullptr);
     }
     auto role = std::make_shared<RoleInfo>();

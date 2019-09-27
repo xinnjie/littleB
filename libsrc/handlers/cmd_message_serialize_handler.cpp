@@ -41,6 +41,7 @@ folly::Future<folly::Unit> CmdMessageSerializeHandler::write(Context* ctx, CmdMe
     buffer->advance(PKG_LENGTH_FIELD_SIZE + OPCODE_SIZE);
     assert(buffer->headroom() == PKG_LENGTH_FIELD_SIZE + OPCODE_SIZE);
     message_ptr->SerializeToArray(buffer->writableData(), message_ptr->ByteSizeLong());
+    SPDLOG_INFO("[CmdMessageSerializeHandler] -- outgoing cmd={} | response={}", cmd_id, message_ptr->ShortDebugString());
     return ctx->fireWrite(std::make_pair(
         cmd_id,
         std::move(buffer)));  // 为长度字段和 cmd_id 字段预留空间

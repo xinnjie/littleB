@@ -1,19 +1,23 @@
 //
 // Created by xinnjie on 2019/9/24.
 //
+#include <login_service/minigame_login_service.h>
 #include <wangle/bootstrap/ServerBootstrap.h>
 #include <wangle/channel/AsyncSocketHandler.h>
-#include <wangle/codec/LengthFieldBasedFrameDecoder.h>
-#include <wangle/codec/LengthFieldPrepender.h>
+#include <wangle/channel/EventBaseHandler.h>
 
+#include "cmd_id.pb.h"
 #include "common_def.h"
 #include "data_manager/command_manager.h"
 #include "data_manager/pb_reflection_manager.h"
 #include "data_manager/roleinfo_manager.h"
+#include "handlers/LengthFieldBasedFrameDecoder.h"
+#include "handlers/LengthFieldPrepender.h"
 #include "handlers/cmd_message_serialize_handler.h"
 #include "handlers/command_dispatcher.h"
 #include "handlers/opcode_inject_handler.h"
 #include "handlers/role_inject_handler.h"
+#include "login_service/minigame_login_service.h"
 #include "register_helper.h"
 #include "sync_redis_wrapper.h"
 
@@ -34,8 +38,10 @@ public:
     LittlebPipeline::Ptr newPipeline(std::shared_ptr<AsyncTransportWrapper> sock) override {
         auto pipeline = LittlebPipeline::create();
         pipeline->addBack(AsyncSocketHandler(sock));
-        pipeline->addBack(LengthFieldBasedFrameDecoder(PKG_LENGTH_FIELD_SIZE, 65536, 0, 0, PKG_LENGTH_FIELD_SIZE, true));
-        pipeline->addBack(LengthFieldPrepender(PKG_LENGTH_FIELD_SIZE, 0, false, true));
+        /* minigame 客户端发包，包长度字段为 2 字节，非网络字节序，长度不包含包长度字段 */
+        pipeline->addBack(
+            littleB::LengthFieldBasedFrameDecoder(PKG_LENGTH_FIELD_SIZE, 65536, 0, 0, PKG_LENGTH_FIELD_SIZE, false));
+        pipeline->addBack(littleB::LengthFieldPrepender(PKG_LENGTH_FIELD_SIZE, 0, false, false));
         pipeline->addBack(OpcodeInjectHandler());
         pipeline->addBack(CmdMessageSerializeHandler(reflection_manager_));
         pipeline->addBack(RoleInjectHandler(role_manager_, redis_wrapper));
@@ -50,6 +56,13 @@ private:
     PbReflectionManager &reflection_manager_;
     SyncRedisWrapper &redis_wrapper;
 };
+void prototest() {
+    C2R_Login req;
+    req.set_account("");
+    req.set_password("111111");
+    req.set_rpcid(LOGIN);
+    SPDLOG_INFO("proto size={}", req.ByteSizeLong());
+}
 void prepareAndCheck(SyncRedisWrapper &redis_wrapper) {
     assert(redis_wrapper.RedisCommand("set __password_%s %s", "hello", "world")->type == REDIS_REPLY_STATUS);
     RoleInfo role;
@@ -68,17 +81,21 @@ void prepareAndCheck(SyncRedisWrapper &redis_wrapper) {
     assert(query_role.progress().main_task_id() == query_role.progress().main_task_id());
 }
 int main(int argc, char **argv) {
-    spdlog::set_level(spdlog::level::trace); // Set global log level to trace
-
+    spdlog::set_level(spdlog::level::trace);  // Set global log level to trace
 
     ServerBootstrap<LittlebPipeline> server;
     RoleinfoManager role_manager;
     CommandManager command_manager;
     PbReflectionManager reflection_manager;
     SyncRedisWrapper redis_wrapper;
+
     redis_wrapper.Connect("127.0.0.1", 6379, timeval{1, 500000});
 
     prepareAndCheck(redis_wrapper);
+
+    prototest();
+
+    RegisterSyncCommand<MinigameFakeLoginService>(command_manager, reflection_manager, LOGIN, redis_wrapper);
 
     //    RegisterSyncCommand<MinigameLoginService>(command_manager, reflection_manager, 31, redis_wrapper);
     server.childPipeline(

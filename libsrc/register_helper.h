@@ -94,7 +94,8 @@ InternalAsyncServiceType AsyncServiceClassDecorator(ArgTypes &... args) {
 //}
 // TODO 将参数改为 CommandManager &, CommandManager &, uint32_t cmd_id, Args...
 //      这样就不需要限制 ServiceInterface， 不断增加成员变量（因为很多 Service 都由各自需要的资源）
-//      发现抄 std::make_shared 就可以了
+//      发现抄 std::make_shared 就可以.
+//      2019.9.27 感觉不用抄了，右值捕捉并不满足需求
 template <typename T, typename... ArgTypes>
 bool RegisterSyncCommand(CommandManager &register_manager, PbReflectionManager &reflection_manager, uint32_t cmd_id,
                          ArgTypes &... args) {

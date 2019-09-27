@@ -39,6 +39,8 @@ add_library(littleb STATIC
         sync_redis_wrapper.h
         login_service/minigame_login_service.cpp
         login_service/minigame_login_service.h
+        handlers/LengthFieldBasedFrameDecoder.cpp
+        handlers/LengthFieldPrepender.cpp
         )
 target_include_directories(littleb
         PUBLIC

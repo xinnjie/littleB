@@ -13,11 +13,12 @@ void littleB::RoleInjectHandler::read(Context *ctx, littleB::CmdMessagePair msg)
     uint32_t cmd_id = msg.first;
     if (cmd_id == LOGIN) {
         static RoleInfo empty_role;
-        MinigameFakeLoginService login_service(redis_wrapper_, role_manager_);
+        MinigameFakeLoginService login_service(redis_wrapper_);
         std::unique_ptr<C2R_Login> req  = boost::dynamic_pointer_cast<C2R_Login>(std::move(msg.second));
         auto role_ptr = login_service.PullRoleInfoFromDB(req->account());
         if (role_ptr) {
             role_manager_.AddRole(addr, role_ptr);
+            SPDLOG_INFO("username={}|address={} login and has pulled role data", req->account(), addr.describe());
         }
         std::unique_ptr<R2C_Login> rsp = std::make_unique<R2C_Login>();
         *rsp = login_service(empty_role, *req);
@@ -30,5 +31,6 @@ void littleB::RoleInjectHandler::read(Context *ctx, littleB::CmdMessagePair msg)
         SPDLOG_INFO("address={} not login or has some problem", addr.describe());
         role = std::make_shared<RoleInfo>();
     }
+    SPDLOG_INFO("address={} login and has pulled role data", addr.describe());
     ctx->fireRead(std::make_tuple(msg.first, role, std::move(msg.second)));
 }
