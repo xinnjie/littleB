@@ -1,5 +1,6 @@
 syntax = "proto3";
 
 enum CmdID {
-    LOGIN = 0;
+    EMPTY = 0;
+    LOGIN = 10001;
 }

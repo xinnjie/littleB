@@ -3,6 +3,7 @@
 //
 
 #include "opcode_inject_handler.h"
+#include <spdlog/spdlog.h>
 namespace littleB {
 
 void OpcodeInjectHandler::read(Context *ctx, std::unique_ptr<folly::IOBuf> msg) {
@@ -14,6 +15,7 @@ void OpcodeInjectHandler::read(Context *ctx, std::unique_ptr<folly::IOBuf> msg) 
         cmd_id = *reinterpret_cast<const uint16_t *>(msg->data());
         msg->advance(sizeof(uint16_t));
     }
+    SPDLOG_TRACE("message incomming cmd_id={}", cmd_id);
     ctx->fireRead(std::make_pair(cmd_id, std::move(msg)));
 }
 folly::Future<folly::Unit> OpcodeInjectHandler::write(Context *ctx,

@@ -34,8 +34,8 @@ public:
     LittlebPipeline::Ptr newPipeline(std::shared_ptr<AsyncTransportWrapper> sock) override {
         auto pipeline = LittlebPipeline::create();
         pipeline->addBack(AsyncSocketHandler(sock));
-        pipeline->addBack(LengthFieldBasedFrameDecoder(4, 65536, 0, 0, 2, true));
-        pipeline->addBack(LengthFieldPrepender(4, 0, false, true));
+        pipeline->addBack(LengthFieldBasedFrameDecoder(PKG_LENGTH_FIELD_SIZE, 65536, 0, 0, PKG_LENGTH_FIELD_SIZE, true));
+        pipeline->addBack(LengthFieldPrepender(PKG_LENGTH_FIELD_SIZE, 0, false, true));
         pipeline->addBack(OpcodeInjectHandler());
         pipeline->addBack(CmdMessageSerializeHandler(reflection_manager_));
         pipeline->addBack(RoleInjectHandler(role_manager_, redis_wrapper));
@@ -68,6 +68,9 @@ void prepareAndCheck(SyncRedisWrapper &redis_wrapper) {
     assert(query_role.progress().main_task_id() == query_role.progress().main_task_id());
 }
 int main(int argc, char **argv) {
+    spdlog::set_level(spdlog::level::trace); // Set global log level to trace
+
+
     ServerBootstrap<LittlebPipeline> server;
     RoleinfoManager role_manager;
     CommandManager command_manager;
@@ -80,7 +83,7 @@ int main(int argc, char **argv) {
     //    RegisterSyncCommand<MinigameLoginService>(command_manager, reflection_manager, 31, redis_wrapper);
     server.childPipeline(
         std::make_shared<LittleBPipelineFactory>(role_manager, command_manager, reflection_manager, redis_wrapper));
-    server.bind(8009);
+    server.bind(10002);
     server.waitForStop();
 
     return 0;
