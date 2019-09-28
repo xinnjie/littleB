@@ -39,7 +39,7 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-    /* PING example_server */
+    /* PING minigame_sever */
     reply = static_cast<redisReply *>(redisCommand(c,"PING"));
     printf("PING: %s\n", reply->str);
     freeReplyObject(reply);
