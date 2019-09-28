@@ -38,5 +38,14 @@ target_link_libraries(log_test
         spdlog::spdlog
         )
 
+add_executable(minigame_basic_test
+        minigame_basic_test.cpp
+        )
+target_link_libraries(minigame_basic_test
+        PUBLIC
+        Catch2::Catch2
+        littleb::littleb
+        )
+
 enable_testing()
 #add_test(test1 example_test)

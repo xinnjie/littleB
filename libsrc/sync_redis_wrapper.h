@@ -28,6 +28,9 @@ public:
         redisReply *reply = reinterpret_cast<redisReply*>(redisCommand(redis_ptr_.get(), format, args...));
         std::snprintf(buf, 100, format, args...);
         SPDLOG_TRACE("redis_command={} | reply_type={}", std::string(buf), reply->type);
+        if (reply->type == REDIS_REPLY_STATUS) {
+            SPDLOG_INFO("reply status: {}", std::string(reply->str, reply->len));
+        }
         RedisReplyPtr reply_ptr = RedisReplyPtr(reply, &freeReplyObject);
         return reply_ptr;
     }

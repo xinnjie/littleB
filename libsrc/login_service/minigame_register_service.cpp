@@ -18,8 +18,8 @@ RegisterRsp MinigameRegisterService::operator()(RoleInfo& role, const RegisterRe
             ret = RegisterRsp::ACCOUNT_ALREADY_EXIST;
             break;
         }
-        reply = redis_wrapper_.RedisCommand("set __password_%s", username.c_str());
-        if (reply->type != REDIS_REPLY_SET) {
+        reply = redis_wrapper_.RedisCommand("set __password_%s %s", username.c_str(), password.c_str());
+        if (reply->type != REDIS_REPLY_STATUS) {
             SPDLOG_WARN("DB set password faild | error_code={}", reply->type);
             ret = RegisterRsp::UNKOWN_EORROR;
             break;
@@ -34,8 +34,10 @@ RegisterRsp MinigameRegisterService::operator()(RoleInfo& role, const RegisterRe
         int gid = reply->integer;
         RoleInfo initial_role;
         initial_role.mutable_basic_info()->set_player_id(gid);
-        reply = redis_wrapper_.RedisCommand("set __role_%s", username.c_str());
-        if (reply->type == REDIS_REPLY_SET) {
+        std::string role_buf;
+        initial_role.SerializeToString(&role_buf);
+        reply = redis_wrapper_.RedisCommand("set __role_%s %b", username.c_str(), role_buf.data(), role_buf.size());
+        if (reply->type == REDIS_REPLY_STATUS) {
             SPDLOG_INFO("register succeed | username={} | gid={}", username, gid);
         } else {
             SPDLOG_WARN("register failed | username={}", username);
