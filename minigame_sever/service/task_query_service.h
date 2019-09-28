@@ -4,6 +4,7 @@
 
 #ifndef LITTLEB_TASK_QUERY_SERVICE_H
 #define LITTLEB_TASK_QUERY_SERVICE_H
+#include "data_manager/roleinfo_manager.h"
 #include "data_manager/task_data_manager.h"
 #include "service_interface.h"
 #include "task_progress.pb.h"
