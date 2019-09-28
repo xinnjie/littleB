@@ -8,9 +8,6 @@
 #include "register.pb.h"
 #include "service_interface.h"
 #include "sync_redis_wrapper.h"
-/**
- * Fake: 由外部调用 PullRoleInfoFromDB 获取Role, 本身的 operator() 只负责收发协议
- */
 class MinigameRegisterService : public littleB::SyncServiceInterface<RegisterReq, RegisterRsp> {
 public:
     explicit MinigameRegisterService(littleB::SyncRedisWrapper& redisWrapper) : redis_wrapper_(redisWrapper) {}

@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+message DBTaskInfo {
+    enum ProgressState {
+        NOT_EXIST = 0;  // 表示不存在该任务已经不存在，应该不会用到。
+        START = 1; // 任务开始，但是没有完成
+        FINISH = 2;  // 该任务已经完成
+    }
+    map<int32, ProgressState> tasks = 1;
+}

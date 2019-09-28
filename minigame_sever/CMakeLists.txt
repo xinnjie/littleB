@@ -1,12 +1,27 @@
 # CMake build : main application
 
+compile_protobuf(PROTO_SCRS PROTO_HDRS
+        SOURCE
+        ${CMAKE_CURRENT_SOURCE_DIR}/proto/task_db.proto
+        ${CMAKE_CURRENT_SOURCE_DIR}/proto/task_progress.proto
+        INCLUDE_PATHS
+        ${CMAKE_CURRENT_SOURCE_DIR}/proto
+        CPP_OUT_DIR
+        ${CMAKE_CURRENT_BINARY_DIR})
+
+
 add_executable(minigame_server
         minigame_sever_main.cpp
-        ${MINIGAME_SRC}
-        service/task_progress_service.cpp service/task_progress_service.h)
+        ${PROTO_SCRS}
+        service/task_query_service.cpp
+        service/task_query_service.h
+        data_manager/task_data_manager.cpp
+        data_manager/task_data_manager.h service/task_update_service.cpp service/task_update_service.h)
 target_include_directories(minigame_server
         PUBLIC
         ${CMAKE_CURRENT_BINARY_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}
+
         )
 target_link_libraries(minigame_server
         littleb::littleb)

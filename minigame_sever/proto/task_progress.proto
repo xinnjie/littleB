@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+message TaskQueryReq // IRequest
+{
+    int32 RpcId = 90;
+//    int32 gid = 1;  // gid 没有必要，客户端没有要查询其他玩家进度信息的需求
+}
+
+message TaskQueryRsp // IResponse
+{
+    enum ErrorCode {
+        SUCCEED = 0;
+        UNKOWN_EORROR = -1;
+    }
+    int32 RpcId = 90;
+    int32 Error = 91;
+    string Message = 92;
+
+    repeated int32 done_tasks = 1;
+}
+
+message TaskUpdateReq // IRequest
+{
+    int32 RpcId = 90;
+    int32 finished_task_id = 1;
+}
+
+message TaskUpdateRsp // IResponse
+{
+    enum ErrorCode {
+        SUCCEED = 0;
+        UNKOWN_EORROR = -1;
+    }
+    int32 RpcId = 90;
+    int32 Error = 91;
+    string Message = 92;
+}
