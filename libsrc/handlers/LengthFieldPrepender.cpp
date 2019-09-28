@@ -92,7 +92,7 @@ Future<Unit> LengthFieldPrepender::write(Context* ctx, std::unique_ptr<IOBuf> bu
     }
 
     len->prependChain(std::move(buf));
-    SPDLOG_INFO("[LengthFieldPrepender] send to client, length={}", len->computeChainDataLength());
+    SPDLOG_TRACE("[LengthFieldPrepender] send to client, length={}", len->computeChainDataLength());
     return ctx->fireWrite(std::move(len));
 }
 

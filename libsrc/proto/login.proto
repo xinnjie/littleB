@@ -1,17 +1,22 @@
 syntax = "proto3";
 // minigame 客户端是一个 c# 写的既能当客户端又能当服务器的厉害东西，这里为了配合客户端，格式完全按照原来的做
-message C2R_Login // IRequest
+
+message LoginReq // IRequest
 {
     int32 RpcId = 90;
     string Account = 1; // 帐号
     string Password = 2; // 密码
 }
 
-message R2C_Login // IResponse
+message LoginRsp // IResponse
 {
+    enum ErrorCode {
+        SUCCEED = 0;
+        UNKOWN_EORROR = -1;
+        LOGIN_PASSWORD_WRONG = 1001;
+        LOGIN_NOT_REGISTERED = 1002;
+    }
     int32 RpcId = 90;
     int32 Error = 91;
     string Message = 92;
-    string Address = 1;
-    int64 Key = 2;
 }

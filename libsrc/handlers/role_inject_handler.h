@@ -19,6 +19,9 @@ public:
      */
     void read(Context* ctx, CmdMessagePair msg) override;
 
+    // TODO 看一下 wangle 的 proxy example， 看一下 inactive 和 readEOF 的区别
+    void transportInactive(Context* ctx) override;
+
     /* 仅透传 */
     folly::Future<folly::Unit> write(Context* ctx, CmdMessagePair msg) override { return ctx->fireWrite(std::move(msg)); }
 

@@ -1,6 +1,8 @@
 //
 // Created by xinnjie on 2019/9/24.
 //
+// Set global log level to trace
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 #include <login_service/minigame_login_service.h>
 #include <wangle/bootstrap/ServerBootstrap.h>
 #include <wangle/channel/AsyncSocketHandler.h>
@@ -57,7 +59,7 @@ private:
     SyncRedisWrapper &redis_wrapper;
 };
 void prototest() {
-    C2R_Login req;
+    LoginReq req;
     req.set_account("");
     req.set_password("111111");
     req.set_rpcid(LOGIN);

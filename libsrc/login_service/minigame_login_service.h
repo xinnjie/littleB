@@ -11,12 +11,12 @@
 /**
  * Fake: 由外部调用 PullRoleInfoFromDB 获取Role, 本身的 operator() 只负责收发协议
  */
-class MinigameFakeLoginService : public littleB::SyncServiceInterface<C2R_Login, R2C_Login>{
+class MinigameFakeLoginService : public littleB::SyncServiceInterface<LoginReq, LoginRsp>{
 public:
 //    MinigameFakeLoginService(littleB::SyncRedisWrapper& redisWrapper, littleB::RoleinfoManager& roleManager)
 //        : redis_wrapper_(redisWrapper), role_manager_(roleManager) {}
     explicit MinigameFakeLoginService(littleB::SyncRedisWrapper& redisWrapper) : redis_wrapper_(redisWrapper) {}
-    R2C_Login operator()(RoleInfo& role, const C2R_Login& request) override;
+    LoginRsp operator()(RoleInfo& role, const LoginReq& request) override;
 
     std::shared_ptr<RoleInfo> PullRoleInfoFromDB(const std::string& username);
 
