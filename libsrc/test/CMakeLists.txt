@@ -1,10 +1,5 @@
 # CMake build : library tests
 
-add_executable(example_test
-        example_test)
-target_link_libraries(example_test
-        Catch2::Catch2)
-
 compile_protobuf(CMD_REGISTER_PROTO_SCRS CMD_REGISTER_PROTO_HDRS
         SOURCE
         ${CMAKE_CURRENT_SOURCE_DIR}/proto/example_service.proto

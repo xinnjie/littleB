@@ -38,7 +38,7 @@ RegisterRsp MinigameRegisterService::operator()(RoleInfo& role, const RegisterRe
         initial_role.SerializeToString(&role_buf);
         reply = redis_wrapper_.RedisCommand("set __role_%s %b", username.c_str(), role_buf.data(), role_buf.size());
         if (reply->type == REDIS_REPLY_STATUS) {
-            SPDLOG_INFO("register succeed | username={} | gid={}", username, gid);
+            SPDLOG_INFO("register succeed | username={} | gid={} | roleinfo={}", username, gid, initial_role.ShortDebugString());
         } else {
             SPDLOG_WARN("register failed | username={}", username);
             ret = RegisterRsp::UNKOWN_EORROR;

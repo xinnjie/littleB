@@ -5,14 +5,13 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 #include <catch2/catch.hpp>
 
+#include <spdlog/spdlog.h>
 #include "login_service/minigame_login_service.h"
 #include "login_service/minigame_register_service.h"
 #include "sync_redis_wrapper.h"
-#include <spdlog/spdlog.h>
 
 using namespace littleB;
 using namespace std;
-
 
 TEST_CASE("basic service test", "[minigame basic test]") {
     spdlog::set_level(spdlog::level::trace);  // Set global log level to trace
@@ -55,7 +54,7 @@ TEST_CASE("basic service test", "[minigame basic test]") {
         REQUIRE(rsp.error() == RegisterRsp::ACCOUNT_ALREADY_EXIST);
     }
 
-    SECTION("register account") {
+    SECTION("register new account") {
         int rpc_id = 333;
         string username = "test_account";
         string password = "test_password";
@@ -75,7 +74,5 @@ TEST_CASE("basic service test", "[minigame basic test]") {
                 REQUIRE(rsp.error() == RegisterRsp::SUCCEED);
             }
         }
-
-
     }
 }
