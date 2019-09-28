@@ -9,25 +9,28 @@ LoginRsp MinigameFakeLoginService::operator()(RoleInfo& role, const LoginReq& re
     assert(!role.has_basic_info() && !role.has_progress());
     LoginRsp rsp;
     rsp.set_rpcid(request.rpcid());
-
-    const std::string& username = request.account();
-    const std::string& password = request.password();
-    auto reply = redis_wrapper_.RedisCommand("get __password_%s", username.c_str());
-    if (reply->type != REDIS_REPLY_STRING) {
-        SPDLOG_INFO("user login: not registered | username={} | password={}", request.account(), request.password());
-        rsp.set_error(LoginRsp::LOGIN_NOT_REGISTERED);
-        return rsp;
-    }
-    SPDLOG_INFO("user login| username={} | password={} | actual_password={}", request.account(), request.password(), reply->str);
-    // TODO 补全 login 逻辑
-    if (!PullRoleInfoFromDB(username)) {
-        SPDLOG_WARN("pull role failed when having correct password, something is wrong");
-        rsp.set_error(LoginRsp::UNKOWN_EORROR);
-        rsp.set_message("pull role info failed");
-        return rsp;
-    }
-    rsp.set_error(LoginRsp::SUCCEED);
-    rsp.set_message("login success");
+    int ret = LoginRsp::SUCCEED;
+    do {
+        const std::string& username = request.account();
+        const std::string& password = request.password();
+        auto reply = redis_wrapper_.RedisCommand("get __password_%s", username.c_str());
+        if (reply->type != REDIS_REPLY_STRING) {
+            SPDLOG_INFO("user login: not registered | username={} | password={}", request.account(),
+                        request.password());
+            ret = LoginRsp::LOGIN_NOT_REGISTERED;
+            break;
+        }
+        SPDLOG_INFO("user login| username={} | password={} | actual_password={}", request.account(), request.password(),
+                    reply->str);
+        // TODO 补全 login 逻辑
+        if (!PullRoleInfoFromDB(username)) {
+            SPDLOG_WARN("pull role failed when having correct password, something is wrong");
+            ret = LoginRsp::UNKOWN_EORROR;
+            break;
+        }
+    } while (0);
+    rsp.set_error(ret);
+    rsp.set_message(LoginRsp::ErrorCode_Name(static_cast<LoginRsp::ErrorCode>(ret)));
     return rsp;
 }
 std::shared_ptr<RoleInfo> MinigameFakeLoginService::PullRoleInfoFromDB(const std::string& username) {

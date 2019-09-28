@@ -11,6 +11,7 @@ compile_protobuf(PROTO_SCRS PROTO_HDRS
         ${CMAKE_CURRENT_SOURCE_DIR}/proto/role.proto
         ${CMAKE_CURRENT_SOURCE_DIR}/proto/login.proto
         ${CMAKE_CURRENT_SOURCE_DIR}/proto/cmd_id.proto
+        ${CMAKE_CURRENT_SOURCE_DIR}/proto/register.proto
         INCLUDE_PATHS
         ${CMAKE_CURRENT_SOURCE_DIR}/proto
         CPP_OUT_DIR
@@ -41,7 +42,7 @@ add_library(littleb STATIC
         login_service/minigame_login_service.h
         handlers/LengthFieldBasedFrameDecoder.cpp
         handlers/LengthFieldPrepender.cpp
-        )
+        login_service/minigame_register_service.cpp login_service/minigame_register_service.h)
 target_include_directories(littleb
         PUBLIC
         ${CMAKE_CURRENT_BINARY_DIR}

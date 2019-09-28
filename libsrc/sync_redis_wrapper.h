@@ -21,10 +21,13 @@ public:
     SyncRedisWrapper() : redis_ptr_(nullptr, &redisFree) {}
 
     template<typename... ArgTypes>
-    RedisReplyPtr RedisCommand(const std::string& format, ArgTypes... args) {
+    RedisReplyPtr RedisCommand(const char *format, ArgTypes... args) {
+        static char buf[100];
         std::lock_guard<std::mutex> guard(redis_lock_);
         assert(redis_ptr_->err == 0);
-        redisReply *reply = reinterpret_cast<redisReply*>(redisCommand(redis_ptr_.get(), format.c_str(), args...));
+        redisReply *reply = reinterpret_cast<redisReply*>(redisCommand(redis_ptr_.get(), format, args...));
+        std::snprintf(buf, 100, format, args...);
+        SPDLOG_TRACE("redis_command={} | reply_type={}", std::string(buf), reply->type);
         RedisReplyPtr reply_ptr = RedisReplyPtr(reply, &freeReplyObject);
         return reply_ptr;
     }

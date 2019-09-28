@@ -1,0 +1,21 @@
+syntax = "proto3";
+// minigame 客户端是一个 c# 写的既能当客户端又能当服务器的厉害东西，这里为了配合客户端，格式完全按照原来的做
+
+message RegisterReq // IRequest
+{
+    int32 RpcId = 90;
+    string Account = 1; // 帐号
+    string Password = 2; // 密码
+}
+
+message RegisterRsp // IResponse
+{
+    enum ErrorCode {
+        SUCCEED = 0;
+        UNKOWN_EORROR = -1;
+        ACCOUNT_ALREADY_EXIST = 2001;
+    }
+    int32 RpcId = 90;
+    int32 Error = 91;
+    string Message = 92;
+}

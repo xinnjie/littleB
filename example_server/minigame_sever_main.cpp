@@ -3,7 +3,6 @@
 //
 // Set global log level to trace
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
-#include <login_service/minigame_login_service.h>
 #include <wangle/bootstrap/ServerBootstrap.h>
 #include <wangle/channel/AsyncSocketHandler.h>
 #include <wangle/channel/EventBaseHandler.h>
@@ -20,6 +19,7 @@
 #include "handlers/opcode_inject_handler.h"
 #include "handlers/role_inject_handler.h"
 #include "login_service/minigame_login_service.h"
+#include "login_service/minigame_register_service.h"
 #include "register_helper.h"
 #include "sync_redis_wrapper.h"
 
@@ -69,12 +69,12 @@ void prepareAndCheck(SyncRedisWrapper &redis_wrapper) {
     assert(redis_wrapper.RedisCommand("set __password_%s %s", "hello", "world")->type == REDIS_REPLY_STATUS);
     RoleInfo role;
     auto basic_ptr = role.mutable_basic_info();
-    basic_ptr->set_player_id("1234567");
+    basic_ptr->set_player_id(31);
     auto progress_ptr = role.mutable_progress();
     progress_ptr->set_main_task_id(99);
     std::string buf;
     assert(role.SerializeToString(&buf));
-    assert(redis_wrapper.RedisCommand("set __role_%s %b", "hello", buf.c_str(), role.ByteSizeLong()));
+    assert(redis_wrapper.RedisCommand("set __role_%s %b", "hello", buf.data(), buf.size()));
     auto reply = redis_wrapper.RedisCommand("get __role_%s", "hello");
     assert(reply->type == REDIS_REPLY_STRING);
     RoleInfo query_role;
@@ -84,6 +84,7 @@ void prepareAndCheck(SyncRedisWrapper &redis_wrapper) {
 }
 int main(int argc, char **argv) {
     spdlog::set_level(spdlog::level::trace);  // Set global log level to trace
+    spdlog::set_pattern("[%H:%M:%S %z] [%l] [thread %t] [%s:%#] [%!] %v");
 
     ServerBootstrap<LittlebPipeline> server;
     RoleinfoManager role_manager;
@@ -97,7 +98,9 @@ int main(int argc, char **argv) {
 
     prototest();
 
+    /* register services */
     RegisterSyncCommand<MinigameFakeLoginService>(command_manager, reflection_manager, LOGIN, redis_wrapper);
+    RegisterSyncCommand<MinigameRegisterService>(command_manager, reflection_manager, REGISTER, redis_wrapper);
 
     //    RegisterSyncCommand<MinigameLoginService>(command_manager, reflection_manager, 31, redis_wrapper);
     server.childPipeline(

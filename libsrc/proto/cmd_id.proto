@@ -3,4 +3,5 @@ syntax = "proto3";
 enum CmdID {
     EMPTY = 0;
     LOGIN = 101;
+    REGISTER = 102; // TODO 根据客户端生成命令字配
 }

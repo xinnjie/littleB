@@ -40,7 +40,7 @@ folly::Future<folly::Unit> CmdMessageSerializeHandler::write(Context* ctx, CmdMe
     auto buffer = folly::IOBuf::create(message_ptr->ByteSizeLong());
     message_ptr->SerializeToArray(buffer->writableData(), message_ptr->ByteSizeLong());
     buffer->append(message_ptr->ByteSizeLong());
-    SPDLOG_INFO("[CmdMessageSerializeHandler] -- outgoing cmd={} | response={} | message length", cmd_id,
+    SPDLOG_INFO("[CmdMessageSerializeHandler] -- outgoing cmd={} | response={} | message length={}", cmd_id,
                 message_ptr->ShortDebugString(), message_ptr->ByteSizeLong());
     return ctx->fireWrite(std::make_pair(cmd_id, std::move(buffer)));
 }
