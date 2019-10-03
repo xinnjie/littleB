@@ -9,7 +9,7 @@ include(compile_proto)
 find_package (Threads REQUIRED)
 find_package(OpenSSL REQUIRED)
 find_package(gflags REQUIRED) # TODO folly 使用了系统的 gflags, 而我使用了 gflags 的源码.   如何解决这种三方库和自己同时使用一个库的问题？目前只能依着 folly 使用系统的 gflags
-find_package(protobuf REQUIRED)
+find_package(Protobuf REQUIRED)
 find_package(boost REQUIRED)
 find_package(folly CONFIG REQUIRED)
 find_package(wangle CONFIG  REQUIRED)
