@@ -24,6 +24,6 @@ sudo apt-get install \
   libsodium-dev
 
 # littleB dependency
-sudo apt-get intall \
+sudo apt-get install \
     libprotobuf-dev
 
