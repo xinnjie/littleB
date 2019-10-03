@@ -12,7 +12,7 @@ jobs:
       - name: run ubuntu_setup.sh
         run:  sudo bash ./scripts/ubuntu_setup.sh
       - name: install folly
-        run: sudo bash /scripts/install_folly.sh
+        run: sudo bash ./scripts/install_folly.sh
       - name: install fizz
         run: sudo bash ./scripts/install_fizz.sh
       - name: install wangle
