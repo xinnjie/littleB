@@ -9,9 +9,17 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
-    - name: Run a one-line script
-      run: echo Hello, world!
-    - name: Run a multi-line script
-      run: |
-        echo Add other actions to build,
-        echo test, and deploy your project.
+    - name: run ubuntu_setup.sh
+      run:  ./script/ubuntu_setup.sh
+      shell: bash
+    - name: install folly
+      run: ./script/install_folly.sh
+      shell: bash
+    - name: install fizz
+      run: ./script/install_fizz.sh
+      shell: bash
+    - name: install wangle
+      run: ./script/install_wangle.sh
+      shell: bash
+    - name: compile project
+      run: mkdir _build && cd _build && cmake -DBUILD_TYPE=debug .. && make -j

@@ -16,3 +16,12 @@
 [submodule "third_party/wangle"]
 	path = third_party/wangle
 	url = https://github.com/facebook/wangle.git
+[submodule "third_party/glog"]
+	path = third_party/glog
+	url = https://github.com/google/glog.git
+[submodule "third_party/fizz"]
+	path = third_party/fizz
+	url = https://github.com/facebookincubator/fizz.git
+[submodule "third_party/protobuf"]
+	path = third_party/protobuf
+	url = https://github.com/protocolbuffers/protobuf.git
