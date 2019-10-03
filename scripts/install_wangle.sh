@@ -1,5 +1,5 @@
 cd third_party/wangle/wangle
 mkdir _build && cd _build
 cmake -DBUILD_TESTS=off ..
-make -j
+make -j2
 sudo make install
