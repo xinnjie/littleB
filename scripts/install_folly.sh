@@ -1,5 +1,5 @@
-cd third_party/folly
+cd third_party/folly/folly
 mkdir _build && cd _build
-cmake ..
-make
+cmake -DBUILD_TESTS=off ..
+make -j
 sudo make install
