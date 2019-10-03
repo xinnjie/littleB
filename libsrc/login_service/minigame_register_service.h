@@ -18,7 +18,7 @@ public:
      * @return 如果注册账号已存在, rsp 返回错误码 ACCOUNT_ALREADY_EXIST
      *         成功返回 SUCCEED
      */
-    RegisterRsp operator()(RoleInfo& role, const RegisterReq& request) override;
+    RegisterRsp operator()(RoleInfo&, const RegisterReq& request) override;
 private:
     littleB::SyncRedisWrapper& redis_wrapper_;
 };

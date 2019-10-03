@@ -5,6 +5,7 @@
 #include "task_query_service.h"
 TaskQueryRsp TaskQueryService::operator()(RoleInfo& role, const TaskQueryReq& request) {
     int32_t gid = role.basic_info().player_id();
+//    task_data_manager_.PullTaskInfoFromDB(gid);
     auto &taskinfo = task_data_manager_.GetTaskInfo(gid);
 
     TaskQueryRsp rsp;

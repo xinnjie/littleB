@@ -4,8 +4,7 @@
 
 #include "minigame_register_service.h"
 
-RegisterRsp MinigameRegisterService::operator()(RoleInfo& role, const RegisterReq& request) {
-    assert(!role.has_basic_info() && !role.has_progress());
+RegisterRsp MinigameRegisterService::operator()(RoleInfo&, const RegisterReq& request) {
     RegisterRsp rsp;
     rsp.set_rpcid(request.rpcid());
     RegisterRsp::ErrorCode ret = RegisterRsp::SUCCEED;

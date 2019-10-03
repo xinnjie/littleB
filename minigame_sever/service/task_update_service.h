@@ -10,9 +10,9 @@
 /**
  * 更新当前任务进度
  */
-class TaskQueryService : public littleB::SyncServiceInterface<TaskUpdateReq, TaskUpdateRsp> {
+class TaskUpdateService : public littleB::SyncServiceInterface<TaskUpdateReq, TaskUpdateRsp> {
 public:
-    explicit TaskQueryService(TaskDataManager& task_data_manager) : task_data_manager_(task_data_manager) {}
+    explicit TaskUpdateService(TaskDataManager& task_data_manager) : task_data_manager_(task_data_manager) {}
 
     /**
      * 向 task_data_manager 更新该玩家的任务信息

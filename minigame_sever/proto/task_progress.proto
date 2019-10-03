@@ -23,7 +23,8 @@ message TaskQueryRsp // IResponse
 message TaskUpdateReq // IRequest
 {
     int32 RpcId = 90;
-    int32 finished_task_id = 1;
+    repeated int32 finished_task_ids = 1;
+    repeated int32 get_task_ids = 2;
 }
 
 message TaskUpdateRsp // IResponse
