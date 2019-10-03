@@ -7,7 +7,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(cmake_debug)
 include(compile_proto)
 find_package (Threads REQUIRED)
-find_package(openssl REQUIRED)
+find_package(OpenSSL REQUIRED)
 find_package(gflags REQUIRED) # TODO folly 使用了系统的 gflags, 而我使用了 gflags 的源码.   如何解决这种三方库和自己同时使用一个库的问题？目前只能依着 folly 使用系统的 gflags
 find_package(protobuf REQUIRED)
 find_package(boost REQUIRED)

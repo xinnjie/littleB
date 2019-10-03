@@ -12,7 +12,7 @@ sudo apt-get install \
     zlib1g-dev \
     binutils-dev \
     libjemalloc-dev \
-    libssl-dev \
+    libssl-dev
 #    advance debuging functionality
 sudo apt-get install \
     libunwind8-dev \
