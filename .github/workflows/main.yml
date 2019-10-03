@@ -10,16 +10,16 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: run ubuntu_setup.sh
-      run:  ./scripts/ubuntu_setup.sh
+      run:  sudo ./scripts/ubuntu_setup.sh
       shell: bash
     - name: install folly
-      run: ./scripts/install_folly.sh
+      run: .sudo /scripts/install_folly.sh
       shell: bash
     - name: install fizz
-      run: ./scripts/install_fizz.sh
+      run: sudo ./scripts/install_fizz.sh
       shell: bash
     - name: install wangle
-      run: ./scripts/install_wangle.sh
+      run: sudo ./scripts/install_wangle.sh
       shell: bash
     - name: compile project
       run: mkdir _build && cd _build && cmake -DBUILD_TYPE=debug .. && make -j
