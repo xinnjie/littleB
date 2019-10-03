@@ -6,20 +6,16 @@ jobs:
   build:
 
     runs-on: ubuntu-18.04
-    
+
     steps:
-    - uses: actions/checkout@v1
-    - name: run ubuntu_setup.sh
-      run:  sudo ./scripts/ubuntu_setup.sh
-      shell: bash
-    - name: install folly
-      run: .sudo /scripts/install_folly.sh
-      shell: bash
-    - name: install fizz
-      run: sudo ./scripts/install_fizz.sh
-      shell: bash
-    - name: install wangle
-      run: sudo ./scripts/install_wangle.sh
-      shell: bash
-    - name: compile project
-      run: mkdir _build && cd _build && cmake -DBUILD_TYPE=debug .. && make -j
+      - uses: actions/checkout@v1
+      - name: run ubuntu_setup.sh
+        run:  sudo bash ./scripts/ubuntu_setup.sh
+      - name: install folly
+        run: sudo bash /scripts/install_folly.sh
+      - name: install fizz
+        run: sudo bash ./scripts/install_fizz.sh
+      - name: install wangle
+        run: sudo bash ./scripts/install_wangle.sh
+      - name: compile project
+        run: mkdir _build && cd _build && cmake -DBUILD_TYPE=debug .. && make -j
