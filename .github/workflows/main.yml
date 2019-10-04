@@ -25,6 +25,11 @@ jobs:
         run: mkdir minigame_server_install
       - name: compile project && install
         run: mkdir _build && cd _build && cmake -DCMAKE_BUILD_TYPE=debug -DCMAKE_INSTALL_PREFIX=minigame_server_install .. && make install
+      - name: upload artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: minigame_server_artifact
+          path: minigame_server_install
       - name: publish minigame docker
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
@@ -33,8 +38,3 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           dockerfile: Dockerfile
           snapshot: true
-      - name: upload artifact
-        uses: actions/upload-artifact@master
-        with:
-          name: minigame_server_artifact
-          path: minigame_server_install
