@@ -22,4 +22,4 @@ jobs:
       - name: install wangle
         run: sudo bash ./scripts/install_wangle.sh
       - name: compile project
-        run: mkdir _build && cd _build && cmake -DBUILD_TYPE=debug .. && make
+        run: mkdir _build && cd _build && cmake -DCMAKE_BUILD_TYPE=debug .. && make
