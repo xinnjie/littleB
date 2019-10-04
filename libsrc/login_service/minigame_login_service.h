@@ -16,7 +16,7 @@ public:
 //    MinigameFakeLoginService(littleB::SyncRedisWrapper& redisWrapper, littleB::RoleinfoManager& roleManager)
 //        : redis_wrapper_(redisWrapper), role_manager_(roleManager) {}
     explicit MinigameFakeLoginService(littleB::SyncRedisWrapper& redisWrapper) : redis_wrapper_(redisWrapper) {}
-    LoginRsp operator()(RoleInfo& role, const LoginReq& request) override;
+    LoginRsp operator()(RoleInfo&, const LoginReq& request) override;
 
     std::shared_ptr<RoleInfo> PullRoleInfoFromDB(const std::string& username);
 

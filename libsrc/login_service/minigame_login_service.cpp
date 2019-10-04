@@ -5,8 +5,7 @@
 #include "minigame_login_service.h"
 #include <spdlog/spdlog.h>
 
-LoginRsp MinigameFakeLoginService::operator()(RoleInfo& role, const LoginReq& request) {
-    assert(!role.has_basic_info() && !role.has_progress());
+LoginRsp MinigameFakeLoginService::operator()(RoleInfo&, const LoginReq& request) {
     LoginRsp rsp;
     rsp.set_rpcid(request.rpcid());
     int ret = LoginRsp::SUCCEED;

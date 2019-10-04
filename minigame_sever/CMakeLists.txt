@@ -40,7 +40,8 @@ add_executable(redis_client_test
 target_link_libraries(redis_client_test
         hiredis)
 
-
+# install
+INSTALL(TARGETS minigame_server DESTINATION bin)
 #print_target_properties(folly)
 #print_target_properties(littleb_lib)
 #print_target_properties(example_excutable)
