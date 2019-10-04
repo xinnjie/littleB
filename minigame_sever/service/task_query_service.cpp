@@ -6,6 +6,7 @@
 TaskQueryRsp TaskQueryService::operator()(RoleInfo& role, const TaskQueryReq& request) {
     int32_t gid = role.basic_info().player_id();
 //    task_data_manager_.PullTaskInfoFromDB(gid);
+    task_data_manager_.PullTaskInfoFromDB(gid);
     auto &taskinfo = task_data_manager_.GetTaskInfo(gid);
 
     TaskQueryRsp rsp;
@@ -25,6 +26,8 @@ TaskQueryRsp TaskQueryService::operator()(RoleInfo& role, const TaskQueryReq& re
             }
         }
     }
+    rsp.set_position_x(taskinfo.position_x());
+    rsp.set_position_y(taskinfo.position_y());
     rsp.set_error(ret);
     rsp.set_message(TaskQueryRsp::ErrorCode_Name(ret));
     return rsp;

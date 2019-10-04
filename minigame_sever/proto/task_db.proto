@@ -7,4 +7,7 @@ message DBTaskInfo {
         FINISH = 2;  // 该任务已经完成
     }
     map<int32, ProgressState> tasks = 1;
+
+    int32 position_x = 2;
+    int32 position_y = 3;
 }
