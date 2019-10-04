@@ -9,6 +9,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
+      - name: Checkout submodules
+        uses: textbook/git-checkout-submodule-action@2.0.0
       - name: show third party libs
         run: ls -l third_party/folly && ls -l third_party/fizz && ls -l third_party/wangle
       - name: run ubuntu_setup.sh

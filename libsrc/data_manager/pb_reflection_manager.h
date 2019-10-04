@@ -4,8 +4,10 @@
 
 #ifndef LITTLEB_PB_REFLECTION_MANAGER_H
 #define LITTLEB_PB_REFLECTION_MANAGER_H
-#include <google/protobuf/message.h>
 #include <memory>
+#include <map>
+#include <google/protobuf/message.h>
+
 namespace littleB {
 class PbReflectionManager {
 public:

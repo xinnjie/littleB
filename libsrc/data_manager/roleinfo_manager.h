@@ -4,8 +4,9 @@
 
 #ifndef LITTLEB_ROLEINFO_MANAGER_H
 #define LITTLEB_ROLEINFO_MANAGER_H
-#include <folly/SocketAddress.h>
 #include <map>
+#include <mutex>
+#include <folly/SocketAddress.h>
 #include "role.pb.h"
 namespace littleB {
 /**

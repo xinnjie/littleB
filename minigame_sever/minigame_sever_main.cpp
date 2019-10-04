@@ -63,7 +63,7 @@ void prototest() {
     req.set_account("");
     req.set_password("111111");
     req.set_rpcid(LOGIN);
-    SPDLOG_INFO("proto size={}", req.ByteSizeLong());
+    SPDLOG_INFO("proto size={}", req.ByteSize());
 }
 void prepareAndCheck(SyncRedisWrapper &redis_wrapper) {
     assert(redis_wrapper.RedisCommand("set __password_%s %s", "hello", "world")->type == REDIS_REPLY_STATUS);

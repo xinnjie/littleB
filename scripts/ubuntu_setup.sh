@@ -25,5 +25,6 @@ sudo apt-get install \
 
 # littleB dependency
 sudo apt-get install \
-    libprotobuf-dev
+    libprotobuf-dev \
+    protobuf-compiler
 
