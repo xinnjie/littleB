@@ -27,9 +27,9 @@ jobs:
         run: mkdir _build && cd _build && cmake -DCMAKE_BUILD_TYPE=debug -DCMAKE_INSTALL_PREFIX=minigame_server_install .. && make install
       - name: publish minigame docker
         uses: elgohr/Publish-Docker-Github-Action@master
-          with:
-            name: xinnjie/minigame
-            username: ${{ secrets.DOCKER_USERNAME }}
-            password: ${{ secrets.DOCKER_PASSWORD }}
-            dockerfile: Dockerfile
-            snapshot: true
+        with:
+          name: xinnjie/minigame
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          dockerfile: Dockerfile
+          snapshot: true
