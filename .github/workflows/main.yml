@@ -36,5 +36,5 @@ jobs:
           name: xinnjie/minigame
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          dockerfile: Dockerfile
+          dockerfile: Dockerfile   # TODO set env
           snapshot: true
