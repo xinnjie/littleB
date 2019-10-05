@@ -4,6 +4,7 @@ compile_protobuf(PROTO_SCRS PROTO_HDRS
         SOURCE
         ${CMAKE_CURRENT_SOURCE_DIR}/proto/task_db.proto
         ${CMAKE_CURRENT_SOURCE_DIR}/proto/task_progress.proto
+        ${CMAKE_CURRENT_SOURCE_DIR}/proto/erase_role.proto
         INCLUDE_PATHS
         ${CMAKE_CURRENT_SOURCE_DIR}/proto
         CPP_OUT_DIR

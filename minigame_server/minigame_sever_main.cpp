@@ -90,10 +90,10 @@ int main(int argc, char **argv) {
     spdlog::set_pattern("[%H:%M:%S %z] [%l] [thread %t] [%s:%#] [%!] %v");
 
     ServerBootstrap<LittlebPipeline> server;
-    RoleinfoManager role_manager;
     CommandManager command_manager;
     PbReflectionManager reflection_manager;
     SyncRedisWrapper redis_wrapper;
+    RoleinfoManager role_manager(redis_wrapper);
     TaskDataManager task_manager(redis_wrapper);
 
 
@@ -104,7 +104,7 @@ int main(int argc, char **argv) {
     prototest();
 
     /* register services */
-    RegisterSyncCommand<MinigameFakeLoginService>(command_manager, reflection_manager, LOGIN, redis_wrapper);
+    RegisterSyncCommand<MinigameFakeLoginService>(command_manager, reflection_manager, LOGIN, redis_wrapper, role_manager);
     RegisterSyncCommand<MinigameRegisterService>(command_manager, reflection_manager, REGISTER, redis_wrapper);
     RegisterSyncCommand<TaskQueryService>(command_manager, reflection_manager, QUERY_TASK, task_manager);
     RegisterSyncCommand<TaskUpdateService>(command_manager, reflection_manager, UPDATE_TASK, task_manager);

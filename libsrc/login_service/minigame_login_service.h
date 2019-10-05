@@ -13,16 +13,13 @@
  */
 class MinigameFakeLoginService : public littleB::SyncServiceInterface<LoginReq, LoginRsp>{
 public:
-//    MinigameFakeLoginService(littleB::SyncRedisWrapper& redisWrapper, littleB::RoleinfoManager& roleManager)
-//        : redis_wrapper_(redisWrapper), role_manager_(roleManager) {}
-    explicit MinigameFakeLoginService(littleB::SyncRedisWrapper& redisWrapper) : redis_wrapper_(redisWrapper) {}
+    MinigameFakeLoginService(littleB::SyncRedisWrapper& redisWrapper, littleB::RoleinfoManager& roleManager)
+        : redis_wrapper_(redisWrapper), role_manager_(roleManager) {}
+//    explicit MinigameFakeLoginService(littleB::SyncRedisWrapper& redisWrapper) : redis_wrapper_(redisWrapper) {}
     LoginRsp operator()(RoleInfo&, const LoginReq& request) override;
-
-    std::shared_ptr<RoleInfo> PullRoleInfoFromDB(const std::string& username);
-
 private:
     littleB::SyncRedisWrapper &redis_wrapper_;
-//    littleB::RoleinfoManager &role_manager_;
+    littleB::RoleinfoManager &role_manager_;
 };
 
 #endif  // LITTLEB_MINIGAME_LOGIN_SERVICE_H

@@ -27,27 +27,22 @@ LoginRsp MinigameFakeLoginService::operator()(RoleInfo&, const LoginReq& request
             ret = LoginRsp::LOGIN_PASSWORD_WRONG;
             break;
         }
-        // TODO 补全 login 逻辑
-        if (!PullRoleInfoFromDB(username)) {
+        auto role_ptr = role_manager_.PullRoleInfoFromDB(username);
+        if (!role_ptr) {
             SPDLOG_WARN("pull role failed when having correct password, something is wrong");
             ret = LoginRsp::UNKOWN_EORROR;
             break;
         }
+        if (!role_ptr->basic_info().is_returning_visitor()) {
+            role_ptr->mutable_basic_info()->set_is_returning_visitor(true);
+            role_manager_.PushRoleToDB(role_ptr);
+            rsp.set_is_returning_visitor(false);
+        } else {
+            rsp.set_is_returning_visitor(true);
+        }
+
     } while (0);
     rsp.set_error(ret);
     rsp.set_message(LoginRsp::ErrorCode_Name(static_cast<LoginRsp::ErrorCode>(ret)));
     return rsp;
-}
-std::shared_ptr<RoleInfo> MinigameFakeLoginService::PullRoleInfoFromDB(const std::string& username) {
-    auto reply = redis_wrapper_.RedisCommand("get __role_%s", username.c_str());
-    if (reply->type != REDIS_REPLY_STRING) {
-        SPDLOG_WARN("no role in DB, something wrong happened during registration");
-        return std::shared_ptr<RoleInfo>(nullptr);
-    }
-    auto role = std::make_shared<RoleInfo>();
-    if (!role->ParseFromArray(reply->str, reply->len)) {
-        SPDLOG_WARN("decode error");
-        return std::shared_ptr<RoleInfo>(nullptr);
-    }
-    return role;
 }

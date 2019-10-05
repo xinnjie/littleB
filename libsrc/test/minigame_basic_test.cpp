@@ -9,6 +9,7 @@
 #include "login_service/minigame_login_service.h"
 #include "login_service/minigame_register_service.h"
 #include "sync_redis_wrapper.h"
+#include "data_manager/roleinfo_manager.h"
 
 using namespace littleB;
 using namespace std;
@@ -19,6 +20,7 @@ TEST_CASE("basic service test", "[minigame basic test]") {
     spdlog::flush_on(spdlog::level::trace);
 
     SyncRedisWrapper redis_wrapper;
+    RoleinfoManager role_manager(redis_wrapper);
     redis_wrapper.Connect("127.0.0.1", 6379, timeval{1, 500000});
     RoleInfo empty_role;
 
@@ -27,7 +29,7 @@ TEST_CASE("basic service test", "[minigame basic test]") {
         string username = "hello";
         string password = "world";
 
-        MinigameFakeLoginService login_service(redis_wrapper);
+        MinigameFakeLoginService login_service(redis_wrapper, role_manager);
         LoginReq req;
         req.set_rpcid(rpc_id);
         req.set_account(username);

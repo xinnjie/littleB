@@ -19,9 +19,9 @@ TaskUpdateRsp TaskUpdateService::operator()(RoleInfo& role, const TaskUpdateReq&
     for (auto finish_task_id : request.finished_task_ids()) {
         (*task_map)[finish_task_id] = DBTaskInfo::FINISH;
     }
-    for (auto get_task_id : request.get_task_ids()) {
-        (*task_map)[get_task_id] = DBTaskInfo::START;
-    }
+//    for (auto get_task_id : request.get_task_ids()) {
+//        (*task_map)[get_task_id] = DBTaskInfo::START;
+//    }
     task_info.set_position_x(request.position_x());
     task_info.set_position_y(request.position_y());
     task_data_manager_.PushTaskInfoToDB(gid);

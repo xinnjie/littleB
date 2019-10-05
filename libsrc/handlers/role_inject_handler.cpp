@@ -15,9 +15,9 @@ void RoleInjectHandler::read(Context *ctx, CmdMessagePair msg) {
     static RoleInfo empty_role;
     switch (static_cast<CmdID>(cmd_id)) {
         case LOGIN: {
-            MinigameFakeLoginService login_service(redis_wrapper_);
+            MinigameFakeLoginService login_service(redis_wrapper_, role_manager_);
             std::unique_ptr<LoginReq> req = boost::dynamic_pointer_cast<LoginReq>(std::move(msg.second));
-            auto role_ptr = login_service.PullRoleInfoFromDB(req->account());
+            auto role_ptr = role_manager_.PullRoleInfoFromDB(req->account());
             if (role_ptr) {
                 role_manager_.AddRole(addr, role_ptr);
                 SPDLOG_INFO("username={} | address={} login and has pulled role data", req->account(), addr.describe());
