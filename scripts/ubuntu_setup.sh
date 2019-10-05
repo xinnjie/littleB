@@ -1,5 +1,5 @@
 # folly dependency
-sudo apt-get install \
+apt-get install \
     libboost-all-dev \
     libevent-dev \
     libdouble-conversion-dev \
@@ -14,17 +14,17 @@ sudo apt-get install \
     libjemalloc-dev \
     libssl-dev
 #    advance debuging functionality
-sudo apt-get install \
+apt-get install \
     libunwind8-dev \
     libelf-dev \
     libdwarf-dev
 
 # fizz dependency
-sudo apt-get install \
+apt-get install \
   libsodium-dev
 
 # littleB dependency
-sudo apt-get install \
+apt-get install \
     libprotobuf-dev \
     protobuf-compiler
 
