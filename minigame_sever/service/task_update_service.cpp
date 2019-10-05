@@ -4,12 +4,16 @@
 
 #include "task_update_service.h"
 TaskUpdateRsp TaskUpdateService::operator()(RoleInfo& role, const TaskUpdateReq& request) {
-    int32_t gid = role.basic_info().player_id();
-    auto& task_info = task_data_manager_.GetTaskInfo(gid);
     TaskUpdateRsp rsp;
     rsp.set_rpcid(request.rpcid());
 
     TaskUpdateRsp::ErrorCode ret = TaskUpdateRsp::SUCCEED;
+    int32_t gid = role.basic_info().player_id();
+    if (!task_data_manager_.TaskInfoExist(gid) && !task_data_manager_.PullTaskInfoFromDB(gid)) {
+        SPDLOG_INFO("a role without task_info");
+    }
+    auto& task_info = task_data_manager_.GetTaskInfo(gid);
+
 
     auto* task_map = task_info.mutable_tasks();
     for (auto finish_task_id : request.finished_task_ids()) {

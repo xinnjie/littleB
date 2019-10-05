@@ -6,6 +6,8 @@
 #include <folly/futures/Future.h>
 #include <spdlog/spdlog.h>
 #include <wangle/channel/Handler.h>
+
+#include "cmd_id.pb.h"
 namespace littleB {
 
 //从 IObuf 中读取数据 反序列化到对应的 pb 结构
@@ -18,7 +20,8 @@ void CmdMessageSerializeHandler::read(Context* ctx, CmdBufPair msg) {
         SPDLOG_ERROR("[CmdMessageSerializeHandler] -- parse pb error | cmd={}", cmd_id);
         ctx->fireReadEOF();  // TODO 发回 parser error 的错误码
     } else {
-        SPDLOG_INFO("[CmdMessageSerializeHandler] -- incoming cmd={} | request={}", cmd_id, pb->ShortDebugString());
+        SPDLOG_INFO("[CmdMessageSerializeHandler] -- incoming cmd={}(id={}) | request={}",
+                CmdID_Name(static_cast<CmdID>(cmd_id)), cmd_id,  pb->ShortDebugString());
         ctx->fireRead(std::make_pair(cmd_id, std::move(pb)));
     }
 }
@@ -40,8 +43,8 @@ folly::Future<folly::Unit> CmdMessageSerializeHandler::write(Context* ctx, CmdMe
     auto buffer = folly::IOBuf::create(message_ptr->ByteSize());
     message_ptr->SerializeToArray(buffer->writableData(), message_ptr->ByteSize());
     buffer->append(message_ptr->ByteSize());
-    SPDLOG_INFO("[CmdMessageSerializeHandler] -- outgoing cmd={} | response={} | message length={}", cmd_id,
-                message_ptr->ShortDebugString(), message_ptr->ByteSize());
+    SPDLOG_INFO("[CmdMessageSerializeHandler] -- outgoing cmd={}(id={}) | response={} | message length={}",
+            CmdID_Name(static_cast<CmdID>(cmd_id)), cmd_id, message_ptr->ShortDebugString(), message_ptr->ByteSize());
     return ctx->fireWrite(std::make_pair(cmd_id, std::move(buffer)));
 }
 //写入数据出现异常

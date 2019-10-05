@@ -53,7 +53,7 @@ InternalSyncServiceType SyncServiceClassDecorator(ArgTypes &... args) {
         using ReqT = typename T::RequestType;
         using RspT = typename T::ResponseType;
         T sync_service{args...};
-        // TODO 为了好看的 API 多了一次拷贝，但是感觉很难优化，因为本身 rsp 不是在堆上的
+        // TODO 为了好看的 API 多了一次拷贝，但是感觉很难优化，因为本身 rsp 不是在堆上的, 改为 swap
         SPDLOG_INFO("request={}", req.ShortDebugString());
         const auto &derived_req = dynamic_cast<const ReqT &>(req);
         RspT derived_rsp = sync_service(role, derived_req);

@@ -18,6 +18,8 @@ public:
 
     DBTaskInfo &GetTaskInfo(int32_t gid);
 
+    bool TaskInfoExist(int32_t gid);
+
     bool RemoveTaskInfo(int32_t gid);
 
 private:

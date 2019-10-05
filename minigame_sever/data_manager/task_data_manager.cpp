@@ -35,9 +35,13 @@ bool TaskDataManager::PushTaskInfoToDB(int32_t gid) {
     return true;
 }
 DBTaskInfo& TaskDataManager::GetTaskInfo(int32_t gid) {
-    assert(task_infos_.count(gid) > 0);
+//    assert(task_infos_.count(gid) > 0);
     return task_infos_[gid];
 }
 bool TaskDataManager::RemoveTaskInfo(int32_t gid) {
     return task_infos_.erase(gid) > 0;
+}
+
+bool TaskDataManager::TaskInfoExist(int32_t gid) {
+    return task_infos_.count(gid) > 0;
 }
