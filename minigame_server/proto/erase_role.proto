@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+message EraseRoleReq // IRequest
+{
+    int32 RpcId = 90;
+}
+
+message EraseRoleRsp // IResponse
+{
+    enum ErrorCode {
+        SUCCEED = 0;
+        UNKOWN_EORROR = 200001;
+    }
+    int32 RpcId = 90;
+    int32 Error = 91;
+    string Message = 92;
+}

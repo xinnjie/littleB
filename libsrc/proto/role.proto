@@ -5,6 +5,7 @@ message TaskProgress {
 
 message BasicInfo {
     int32 player_id = 1;
+    bool is_returning_visitor = 2;
 }
 message RoleInfo {
     BasicInfo basic_info = 1;

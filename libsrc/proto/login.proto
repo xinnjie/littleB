@@ -21,4 +21,6 @@ message LoginRsp // IResponse
     string Message = 92;
 
     int32 gid = 1;
+    // 是二次登陆的玩家
+    bool is_returning_visitor = 2;
 }

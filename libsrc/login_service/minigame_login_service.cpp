@@ -21,6 +21,12 @@ LoginRsp MinigameFakeLoginService::operator()(RoleInfo&, const LoginReq& request
         }
         SPDLOG_INFO("user login| username={} | password={} | actual_password={}", request.account(), request.password(),
                     reply->str);
+        if (request.password() != reply->str) {
+            SPDLOG_WARN("incorrect password | username={} | password={} | actual_password={}", request.account(), request.password(),
+                        reply->str);
+            ret = LoginRsp::LOGIN_PASSWORD_WRONG;
+            break;
+        }
         // TODO 补全 login 逻辑
         if (!PullRoleInfoFromDB(username)) {
             SPDLOG_WARN("pull role failed when having correct password, something is wrong");
