@@ -22,14 +22,16 @@ jobs:
       - name: install wangle
         run: sudo bash ./scripts/install_wangle.sh
       - name: mkdir minigame install dir
-        run: mkdir "$GITHUB_WORKSPACE"/minigame_server_install
+        run: mkdir minigame_server_install
       - name: compile project && install
-        run: mkdir _build && cd _build && cmake -DCMAKE_BUILD_TYPE=debug -DCMAKE_INSTALL_PREFIX="$GITHUB_WORKSPACE"/minigame_server_install .. && make install -j2
+        run: mkdir _build && cd _build && cmake -DCMAKE_BUILD_TYPE=debug -DCMAKE_INSTALL_PREFIX=minigame_server_install .. && make install -j2
+      - name: copy to /tmp
+        run: cp -r minigame_server_install /tmp
       - name: upload artifact
         uses: actions/upload-artifact@master
         with:
           name: minigame_server_artifact
-          path: "$GITHUB_WORKSPACE"/minigame_server_install
+          path: /tmp/minigame_server_install
       - name: publish minigame docker
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
