@@ -12,8 +12,8 @@ message RegisterRsp // IResponse
 {
     enum ErrorCode {
         SUCCEED = 0;
-        UNKOWN_EORROR = -1;
-        ACCOUNT_ALREADY_EXIST = 2001;
+        UNKOWN_EORROR = 200001;
+        ACCOUNT_ALREADY_EXIST = 200002;
     }
     int32 RpcId = 90;
     int32 Error = 91;

@@ -12,9 +12,9 @@ message LoginRsp // IResponse
 {
     enum ErrorCode {
         SUCCEED = 0;
-        UNKOWN_EORROR = -1;
-        LOGIN_PASSWORD_WRONG = 1001;
-        LOGIN_NOT_REGISTERED = 1002;
+        UNKOWN_EORROR = 200001;
+        LOGIN_PASSWORD_WRONG = 200002;
+        LOGIN_NOT_REGISTERED = 200003;
     }
     int32 RpcId = 90;
     int32 Error = 91;
