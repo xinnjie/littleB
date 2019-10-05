@@ -29,7 +29,7 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           name: minigame_server_artifact
-          path: /tmp/minigame_server_install
+          path: minigame_server_install
       - name: publish minigame docker
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
