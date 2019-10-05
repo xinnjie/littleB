@@ -3,7 +3,7 @@ syntax = "proto3";
 enum CmdID {
     EMPTY = 0;
     LOGIN = 101;
-    REGISTER = 102; // TODO 根据客户端生成命令字配
-    QUERY_TASK = 103;  // TODO 客户端生成
-    UPDATE_TASK= 104;
+    REGISTER = 103;
+    QUERY_TASK = 105;
+    UPDATE_TASK= 107;
 }
