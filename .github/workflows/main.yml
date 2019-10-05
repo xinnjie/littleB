@@ -24,7 +24,7 @@ jobs:
       - name: mkdir minigame install dir
         run: mkdir minigame_server_install
       - name: compile project && install
-        run: mkdir _build && cd _build && cmake -DCMAKE_BUILD_TYPE=debug -DCMAKE_INSTALL_PREFIX=servers_docker_build/minigame_server .. && make install -j2
+        run: mkdir _build && cd _build && cmake -DCMAKE_BUILD_TYPE=debug -DCMAKE_INSTALL_PREFIX=../servers_docker_build/minigame_server .. && make install -j2
       - name: upload artifact
         uses: actions/upload-artifact@master
         with:
