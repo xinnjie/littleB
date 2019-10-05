@@ -22,9 +22,9 @@ jobs:
       - name: install wangle
         run: sudo bash ./scripts/install_wangle.sh
       - name: mkdir minigame install dir
-        run: mkdir /tmp/minigame_server_install
+        run: mkdir minigame_server_install
       - name: compile project && install
-        run: mkdir _build && cd _build && cmake -DCMAKE_BUILD_TYPE=debug -DCMAKE_INSTALL_PREFIX=/tmp/minigame_server_install .. && make install
+        run: mkdir _build && cd _build && cmake -DCMAKE_BUILD_TYPE=debug -DCMAKE_INSTALL_PREFIX=minigame_server_install .. && make install
       - name: upload artifact
         uses: actions/upload-artifact@master
         with:
