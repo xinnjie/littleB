@@ -9,7 +9,7 @@
 #include "data_manager/roleinfo_manager.h"
 #include "login.pb.h"
 /**
- * Fake: 由外部调用 PullRoleInfoFromDB 获取Role, 本身的 operator() 只负责收发协议
+ * Fake: 并不是直接收发包的 service, 登陆协议由 role injector直接接管，MinigameFakeLoginService 被 role injector 调用
  */
 class MinigameFakeLoginService : public littleB::SyncServiceInterface<LoginReq, LoginRsp>{
 public:

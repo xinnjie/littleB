@@ -6,4 +6,5 @@ enum CmdID {
     REGISTER = 103;
     QUERY_TASK = 105;
     UPDATE_TASK= 107;
+    ERASE_ROLE = 109;
 }

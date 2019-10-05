@@ -3,6 +3,7 @@
 //
 // Set global log level to trace
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+
 #include <wangle/bootstrap/ServerBootstrap.h>
 #include <wangle/channel/AsyncSocketHandler.h>
 #include <wangle/channel/EventBaseHandler.h>
@@ -23,6 +24,7 @@
 #include "login_service/minigame_register_service.h"
 #include "service/task_query_service.h"
 #include "service/task_update_service.h"
+#include "service/erase_role_service.h"
 #include "register_helper.h"
 #include "sync_redis_wrapper.h"
 
@@ -36,16 +38,18 @@ class LittleBPipelineFactory : public PipelineFactory<LittlebPipeline> {
 public:
     LittleBPipelineFactory(RoleinfoManager &roleManager, CommandManager &commandManager,
                            PbReflectionManager &reflectionManager, SyncRedisWrapper &redisWrapper)
-        : role_manager_(roleManager),
-          command_manager_(commandManager),
-          reflection_manager_(reflectionManager),
-          redis_wrapper(redisWrapper) {}
+            : role_manager_(roleManager),
+              command_manager_(commandManager),
+              reflection_manager_(reflectionManager),
+              redis_wrapper(redisWrapper) {}
+
     LittlebPipeline::Ptr newPipeline(std::shared_ptr<AsyncTransportWrapper> sock) override {
         auto pipeline = LittlebPipeline::create();
         pipeline->addBack(AsyncSocketHandler(sock));
         /* minigame 客户端发包，包长度字段为 2 字节，非网络字节序，长度不包含包长度字段 */
         pipeline->addBack(
-            littleB::LengthFieldBasedFrameDecoder(PKG_LENGTH_FIELD_SIZE, 65536, 0, 0, PKG_LENGTH_FIELD_SIZE, false));
+                littleB::LengthFieldBasedFrameDecoder(PKG_LENGTH_FIELD_SIZE, 65536, 0, 0, PKG_LENGTH_FIELD_SIZE,
+                                                      false));
         pipeline->addBack(littleB::LengthFieldPrepender(PKG_LENGTH_FIELD_SIZE, 0, false, false));
         pipeline->addBack(OpcodeInjectHandler());
         pipeline->addBack(CmdMessageSerializeHandler(reflection_manager_));
@@ -61,6 +65,7 @@ private:
     PbReflectionManager &reflection_manager_;
     SyncRedisWrapper &redis_wrapper;
 };
+
 void prototest() {
     LoginReq req;
     req.set_account("");
@@ -68,6 +73,7 @@ void prototest() {
     req.set_rpcid(LOGIN);
     SPDLOG_INFO("proto size={}", req.ByteSize());
 }
+
 void prepareAndCheck(SyncRedisWrapper &redis_wrapper) {
     assert(redis_wrapper.RedisCommand("set __password_%s %s", "hello", "world")->type == REDIS_REPLY_STATUS);
     RoleInfo role;
@@ -85,6 +91,7 @@ void prepareAndCheck(SyncRedisWrapper &redis_wrapper) {
     assert(query_role.basic_info().player_id() == query_role.basic_info().player_id());
     assert(query_role.progress().main_task_id() == query_role.progress().main_task_id());
 }
+
 int main(int argc, char **argv) {
     spdlog::set_level(spdlog::level::trace);  // Set global log level to trace
     spdlog::set_pattern("[%H:%M:%S %z] [%l] [thread %t] [%s:%#] [%!] %v");
@@ -104,15 +111,16 @@ int main(int argc, char **argv) {
     prototest();
 
     /* register services */
-    RegisterSyncCommand<MinigameFakeLoginService>(command_manager, reflection_manager, LOGIN, redis_wrapper, role_manager);
+    RegisterSyncCommand<MinigameFakeLoginService>(command_manager, reflection_manager, LOGIN, redis_wrapper,
+                                                  role_manager);
     RegisterSyncCommand<MinigameRegisterService>(command_manager, reflection_manager, REGISTER, redis_wrapper);
     RegisterSyncCommand<TaskQueryService>(command_manager, reflection_manager, QUERY_TASK, task_manager);
     RegisterSyncCommand<TaskUpdateService>(command_manager, reflection_manager, UPDATE_TASK, task_manager);
-
+    RegisterSyncCommand<EraseRoleService>(command_manager, reflection_manager, ERASE_ROLE, role_manager);
 
     //    RegisterSyncCommand<MinigameLoginService>(command_manager, reflection_manager, 31, redis_wrapper);
     server.childPipeline(
-        std::make_shared<LittleBPipelineFactory>(role_manager, command_manager, reflection_manager, redis_wrapper));
+            std::make_shared<LittleBPipelineFactory>(role_manager, command_manager, reflection_manager, redis_wrapper));
     server.bind(10002);
     server.waitForStop();
 

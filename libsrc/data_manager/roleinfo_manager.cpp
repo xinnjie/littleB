@@ -34,13 +34,20 @@ bool littleB::RoleinfoManager::PushRoleToDB(const folly::SocketAddress &remote_a
 }
 
 bool littleB::RoleinfoManager::PushRoleToDB(std::shared_ptr<RoleInfo> role) {
-    std::string buf;
-    role->SerializeToString(&buf);
-    auto reply = redis_wrapper_.RedisCommand("set __role_%s %b", role->basic_info().username().c_str(), buf.data(), buf.size());
-    if (reply->type != REDIS_REPLY_STATUS) {
-        SPDLOG_WARN("push role_info failed | username={}", role->basic_info().username());
+    if (!role) {
         return false;
     }
-    SPDLOG_INFO("push to DB succeed | role_info={}", role->ShortDebugString());
+    return PushRoleToDB(*role);
+}
+
+bool littleB::RoleinfoManager::PushRoleToDB(const RoleInfo &role) {
+    std::string buf;
+    role.SerializeToString(&buf);
+    auto reply = redis_wrapper_.RedisCommand("set __role_%s %b", role.basic_info().username().c_str(), buf.data(), buf.size());
+    if (reply->type != REDIS_REPLY_STATUS) {
+        SPDLOG_WARN("push role_info failed | username={}", role.basic_info().username());
+        return false;
+    }
+    SPDLOG_INFO("push to DB succeed | role_info={}", role.ShortDebugString());
     return true;
 }

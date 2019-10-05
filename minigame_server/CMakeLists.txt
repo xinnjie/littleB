@@ -17,7 +17,7 @@ add_executable(minigame_server
         service/task_query_service.cpp
         service/task_query_service.h
         data_manager/task_data_manager.cpp
-        data_manager/task_data_manager.h service/task_update_service.cpp service/task_update_service.h)
+        data_manager/task_data_manager.h service/task_update_service.cpp service/task_update_service.h service/erase_role_service.cpp service/erase_role_service.h)
 target_include_directories(minigame_server
         PUBLIC
         ${CMAKE_CURRENT_BINARY_DIR}
