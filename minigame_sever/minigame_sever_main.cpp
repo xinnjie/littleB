@@ -12,6 +12,7 @@
 #include "data_manager/command_manager.h"
 #include "data_manager/pb_reflection_manager.h"
 #include "data_manager/roleinfo_manager.h"
+#include "data_manager/task_data_manager.h"
 #include "handlers/LengthFieldBasedFrameDecoder.h"
 #include "handlers/LengthFieldPrepender.h"
 #include "handlers/cmd_message_serialize_handler.h"
@@ -20,6 +21,8 @@
 #include "handlers/role_inject_handler.h"
 #include "login_service/minigame_login_service.h"
 #include "login_service/minigame_register_service.h"
+#include "service/task_query_service.h"
+#include "service/task_update_service.h"
 #include "register_helper.h"
 #include "sync_redis_wrapper.h"
 
@@ -91,6 +94,8 @@ int main(int argc, char **argv) {
     CommandManager command_manager;
     PbReflectionManager reflection_manager;
     SyncRedisWrapper redis_wrapper;
+    TaskDataManager task_manager(redis_wrapper);
+
 
     redis_wrapper.Connect("127.0.0.1", 6379, timeval{1, 500000});
 
@@ -101,6 +106,9 @@ int main(int argc, char **argv) {
     /* register services */
     RegisterSyncCommand<MinigameFakeLoginService>(command_manager, reflection_manager, LOGIN, redis_wrapper);
     RegisterSyncCommand<MinigameRegisterService>(command_manager, reflection_manager, REGISTER, redis_wrapper);
+    RegisterSyncCommand<TaskQueryService>(command_manager, reflection_manager, QUERY_TASK, task_manager);
+    RegisterSyncCommand<TaskUpdateService>(command_manager, reflection_manager, UPDATE_TASK, task_manager);
+
 
     //    RegisterSyncCommand<MinigameLoginService>(command_manager, reflection_manager, 31, redis_wrapper);
     server.childPipeline(
