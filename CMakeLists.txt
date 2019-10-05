@@ -16,6 +16,6 @@ find_package(wangle CONFIG  REQUIRED)
 find_package(fizz REQUIRED)
 add_subdirectory(third_party EXCLUDE_FROM_ALL)
 add_subdirectory(libsrc)
-add_subdirectory(minigame_sever)
+add_subdirectory(minigame_server)
 
 enable_testing()
