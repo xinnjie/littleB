@@ -79,6 +79,7 @@ void prepareAndCheck(SyncRedisWrapper &redis_wrapper) {
     RoleInfo role;
     auto basic_ptr = role.mutable_basic_info();
     basic_ptr->set_player_id(31);
+    basic_ptr->set_username("hello");
     auto progress_ptr = role.mutable_progress();
     progress_ptr->set_main_task_id(99);
     std::string buf;
@@ -117,7 +118,13 @@ int main(int argc, char **argv) {
     RegisterSyncCommand<TaskQueryService>(command_manager, reflection_manager, QUERY_TASK, task_manager);
     RegisterSyncCommand<TaskUpdateService>(command_manager, reflection_manager, UPDATE_TASK, task_manager);
     RegisterSyncCommand<EraseRoleService>(command_manager, reflection_manager, ERASE_ROLE, role_manager);
-
+    MinigameRegisterService register_service(redis_wrapper);
+    RegisterReq req;
+    req.set_rpcid(10);
+    req.set_password("2");
+    req.set_account("2");
+    RoleInfo role;
+    auto rsp = register_service(role, req);
     //    RegisterSyncCommand<MinigameLoginService>(command_manager, reflection_manager, 31, redis_wrapper);
     server.childPipeline(
             std::make_shared<LittleBPipelineFactory>(role_manager, command_manager, reflection_manager, redis_wrapper));

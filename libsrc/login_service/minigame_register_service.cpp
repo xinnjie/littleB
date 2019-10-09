@@ -33,6 +33,7 @@ RegisterRsp MinigameRegisterService::operator()(RoleInfo&, const RegisterReq& re
         int gid = reply->integer;
         RoleInfo initial_role;
         initial_role.mutable_basic_info()->set_player_id(gid);
+        initial_role.mutable_basic_info()->set_username(request.account());
         std::string role_buf;
         initial_role.SerializeToString(&role_buf);
         reply = redis_wrapper_.RedisCommand("set __role_%s %b", username.c_str(), role_buf.data(), role_buf.size());
