@@ -95,7 +95,7 @@ void prepareAndCheck(SyncRedisWrapper &redis_wrapper) {
 
 int main(int argc, char **argv) {
     spdlog::set_level(spdlog::level::trace);  // Set global log level to trace
-    spdlog::set_pattern("[%H:%M:%S %z] [%l] [thread %t] [%s:%#] [%!] %v");
+    spdlog::set_pattern("[%D %H:%M:%S %z] [%l] [thread %t] [%s:%#] [%!] %v");
 
     ServerBootstrap<LittlebPipeline> server;
     CommandManager command_manager;
@@ -126,6 +126,7 @@ int main(int argc, char **argv) {
     RoleInfo role;
     auto rsp = register_service(role, req);
     //    RegisterSyncCommand<MinigameLoginService>(command_manager, reflection_manager, 31, redis_wrapper);
+//    server.group(std::make_shared<folly::IOThreadPoolExecutor>(1));
     server.childPipeline(
             std::make_shared<LittleBPipelineFactory>(role_manager, command_manager, reflection_manager, redis_wrapper));
     server.bind(10002);

@@ -13,6 +13,10 @@ void CommandDistributor::read(Context *ctx, ServiceTuple msg) {
     assert(command_manager_.IsValidCmd(cmd_id));
     if (command_manager_.IsSyncCmd(cmd_id)) {
         SPDLOG_TRACE("[CommandDistributor] RunSyncService CMD={}", cmd_id);
+        if (!command_manager_.IsValidCmd(cmd_id)) {
+            SPDLOG_WARN("invalid cmd_id={}", cmd_id);
+            return;
+        }
         MessagePtr response_ptr = command_manager_.RunSyncService(cmd_id, *role_ptr, *request_ptr);
         write(ctx, std::make_pair(cmd_id, std::move(response_ptr)));
     } else if (command_manager_.IsAsyncCmd(cmd_id)) {

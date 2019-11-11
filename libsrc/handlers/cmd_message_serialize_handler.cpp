@@ -13,6 +13,10 @@ namespace littleB {
 //从 IObuf 中读取数据 反序列化到对应的 pb 结构
 void CmdMessageSerializeHandler::read(Context* ctx, CmdBufPair msg) {
     uint32_t cmd_id = msg.first;
+        if (!reflection_manager_.IsValidCmd(cmd_id)) {
+            SPDLOG_WARN("invalid cmd_id={}", cmd_id);
+            return;
+        }
     std::unique_ptr<folly::IOBuf> buf = std::move(msg.second);
     std::unique_ptr<google::protobuf::Message> pb =
         std::unique_ptr<google::protobuf::Message>(reflection_manager_.GetRequestReflection(cmd_id).New());

@@ -3,6 +3,7 @@ project(littleB)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_VERBOSE_MAKEFILE ON)
+set(Boost_USE_STATIC_LIBS ON)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(cmake_debug)
 include(compile_proto)
