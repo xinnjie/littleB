@@ -33,7 +33,7 @@ jobs:
       - name: pre publish docker
         run: cp Dockerfile servers_docker_build
       - name: publish minigame docker
-        uses: elgohr/Publish-Docker-Github-Action@master
+        uses: elgohr/Publish-Docker-Github-Action@v5
         with:
           name: xinnjie/minigame
           username: ${{ secrets.DOCKER_USERNAME }}
